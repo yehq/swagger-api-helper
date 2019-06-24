@@ -47,7 +47,6 @@ const swaggerMock = (app: Application, { urls = [], propertyResolver, resultReso
         app.all(`${mockBasePath}${basePath}/*`, (req, res, next) => {
             const targetPath = req.path.split(`${mockBasePath}${basePath}`)[1];
             const currentPath = matchPath(targetPath, paths);
-            console.log(req.path, req.url, currentPath);
 
             const path = currentPath && currentPath[req.method.toLowerCase() as Methods] ? currentPath[req.method.toLowerCase() as Methods] : undefined;
             if (!path) {
