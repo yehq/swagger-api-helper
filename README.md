@@ -8,7 +8,7 @@
 const app = express();
 swaggerMock.default(app, {
     basePath: '/api',
-    urls,
+    urls, // string[] swagger url
 });
 ```
 
@@ -19,7 +19,7 @@ devServer: {
     before: app => {
         swaggerMocker.default(app, {
             basePath: '/api',
-            urls,
+            urls, // string[] swagger url
         });
     },
 },
