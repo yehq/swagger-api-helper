@@ -15,30 +15,46 @@ const swaggerApi = ({ urls, hasBasePath = true, outputPath }: Options) => {
         return url;
     });
     const genApis = targetUrls.map(([url, dirname], index) => {
-        return new Promise((resolve, reject) => {
-            const successMessages = [];
-            const errorMessages = [];
+        return new Promise<{ successMessages: GenMessage[], errorMessages: GenMessage[] }>((resolve, reject) => {
+            const successMessages: GenMessage[] = [];
+            const errorMessages: GenMessage[] = [];
             return fetchSwaggerJson(url)
                 .then((data) => {
+                    let count = 0;
                     const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);
                     const apiModelPromises = Object.keys(swaggerObj).map((key) => {
                         const contents = getApiModel(swaggerObj[key].paths, key, hasBasePath ? basePath : '', false);
                         const filename = join(outputPath, `${dirname}/${key}.ts`);
-                        return genFile(filename, contents);
+                        return () => genFile(filename, contents);
                     });
                     const interfaceModelsContent = getInterfacesModel(definitions);
                     const interfacesFilename = join(outputPath, `${dirname}/${interfaceModelsName}.ts`);
-                    const interfacesModelPromise = genFile(interfacesFilename, interfaceModelsContent);
+                    const interfacesModelPromise = () => genFile(interfacesFilename, interfaceModelsContent);
+
+                    const allPromises = [...apiModelPromises, interfacesModelPromise];
+                    allPromises.forEach(item => {
+                        item().then((successMessage) => {
+                            successMessages.push(successMessage)
+                        }).catch((errMessage) => {
+                            errorMessages.push(errMessage)
+                        }).finally(() => {
+                            count++
+                            if (count === allPromises.length) {
+                                resolve({
+                                    successMessages,
+                                    errorMessages,
+                                });
+                            }
+                        })
+                    })
                 })
                 .catch((e) => {
                     console.log(e);
+                    reject(e);
                 });
         });
     });
-    return Promise.all(genApis).then((messages) => {
-        console.log(messages);
-        return messages;
-    });
+    return Promise.all(genApis);
 };
 
 export default swaggerApi;
@@ -49,11 +65,11 @@ function genFile(filename: string, content: string) {
         writeFile(filename, content)
             .then(() => {
                 resolve(getSuccessMessage(filename));
-                console.log(`${fileBasename}.ts saved!`);
+                console.log(`${fileBasename} saved!`);
             })
             .catch((err) => {
                 reject(getErrorMessage(filename));
-                return console.error(`Failed to store ${fileBasename}.ts:${err.message}`);
+                return console.error(`Failed to store ${fileBasename}:${err.message}`);
             });
     });
 }

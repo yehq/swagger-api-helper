@@ -19,10 +19,9 @@ swaggerMock(app, {
 });
 
 app.get('/genApi', (req, res) => {
-    swaggerApi({ urls, outputPath });
-    res.json({
-        message: 'success',
-    });
+    swaggerApi({ urls, outputPath }).then(message => {
+        res.json(message);
+    })
 });
 
 app.get('/swaggerJson', (req, res) => {
