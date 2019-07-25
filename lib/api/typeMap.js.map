@@ -1,0 +1,1 @@
+{"version":3,"file":"typeMap.js","sourceRoot":"","sources":["../../src/api/typeMap.ts"],"names":[],"mappings":";;AAAA,IAAM,OAAO,GAA2B;IACpC,MAAM,EAAE,QAAQ;IAChB,KAAK,EAAE,OAAO;IACd,OAAO,EAAE,QAAQ;IACjB,OAAO,EAAE,SAAS;IAClB,IAAI,EAAE,MAAM;IACZ,MAAM,EAAE,QAAQ;CACnB,CAAC;AACF,kBAAe,OAAO,CAAC"}

@@ -1,7 +1,7 @@
 import { SwaggerResponse, SwaggerModel, CustomPath, Methods, In, Parameter, Path } from './interfaces';
 
 const getPathsByTagName = (item: Path) => {
-    return item.parameters.reduce<{ [key in In]?: Parameter<key>[] }>((paraTarget, parameter) => {
+    return (item.parameters || []).reduce<{ [key in In]?: Parameter<key>[] }>((paraTarget, parameter) => {
         if (!paraTarget[parameter.in]) paraTarget[parameter.in] = [];
         paraTarget[parameter.in]!.push(parameter as any);
         return paraTarget;
@@ -30,6 +30,7 @@ export default (data: SwaggerResponse) => {
                     const parametersGroup = getPathsByTagName(item);
                     customPaths.push({
                         ...item,
+                        method: method as Methods,
                         url: pathName.replace(/{/g, '${'),
                         pathKey: getPathKey(method as Methods, pathName),
                         parametersInBody: parametersGroup[In.body],

@@ -7,6 +7,9 @@ export const enum Type {
     integer = 'integer',
     array = 'array',
     string = 'string',
+    any = 'any',
+    boolean = 'boolean',
+    file = 'file',
 }
 
 // swagger tag
@@ -54,8 +57,54 @@ export const enum In {
 // 数据格式
 export type Format = string | 'int64' | 'date-time';
 
+// 结构的模型
+export interface Schema {
+    format?: Format;
+    enum?: string[];
+    type?: Type;
+    $$ref?: string;
+    items?: Schema;
+    properties?: Properties;
+    // 存在时不存在 ref
+    additionalProperties?: Schema;
+    title?: string;
+    xml?: { name: string };
+    required?: string[];
+
+    description?: string;
+    example?: any;
+    default?: string;
+    allowEmptyValue?: boolean;
+}
+
 // 请求参数基本类型
-export interface BaseParameter<T = In> {
+// export interface BaseParameter<T = In> {
+//     // 默认值
+//     default?: any;
+//     format?: Format;
+//     description: string;
+//     in: T;
+//     name: string;
+//     required: boolean;
+//     type?: Type;
+//     allowEmptyValue?: boolean;
+// }
+
+// 数组参数
+// export interface ArrayParameter extends BaseParameter {
+//     type: Type.array;
+//     collectionFormat: string;
+//     items: Schema;
+// }
+
+// 对象参数
+// export interface ObjectParameter extends BaseParameter {
+//     schema: Schema;
+//     type: undefined;
+// }
+
+// 请求参数类型
+export interface Parameter<T = In> {
     // 默认值
     default?: any;
     format?: Format;
@@ -65,34 +114,10 @@ export interface BaseParameter<T = In> {
     required: boolean;
     type?: Type;
     allowEmptyValue?: boolean;
-}
-
-// 结构的模型
-export interface Schema {
-    enum?: string[];
-    type?: Type;
-    $$ref?: string;
+    schema?: Schema;
+    collectionFormat?: string;
     items?: Schema;
-    properties?: Properties;
-    // 存在时不存在 ref
-    additionalProperties?: Schema;
 }
-
-// 数组参数
-export interface ArrayParameter extends BaseParameter {
-    type: Type.array;
-    collectionFormat: string;
-    items: Schema;
-}
-
-// 对象参数
-export interface ObjectParameter extends BaseParameter {
-    schema: Schema;
-    type: undefined;
-}
-
-// 请求参数类型
-export type Parameter<T = In> = BaseParameter<T> | ArrayParameter | ObjectParameter;
 
 // 请求返回结果
 export interface Response {
@@ -104,9 +129,9 @@ export type Path = {
     consumes?: string[];
     deprecated: boolean;
     operationId: string;
-    parameters: Parameter[];
+    parameters?: Parameter[];
     produces: string[];
-    responses: { [key: number]: Response };
+    responses: { [key: string]: Response };
     summary: string;
     tags: string[];
     __originalOperationId?: string;
@@ -134,6 +159,7 @@ export interface SwaggerResponse {
 export interface CustomPath extends Path {
     pathKey: string;
     url: string;
+    method: Methods;
     parametersInPath?: Parameter<In.path>[];
     parametersInQuery?: Parameter<In.query>[];
     parametersInBody?: Parameter<In.body>[];
