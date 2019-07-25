@@ -19,3 +19,12 @@ export interface PayloadContent {
     typeName: string;
     description?: string;
 }
+export declare enum Status {
+    success = "success",
+    error = "error"
+}
+export interface GenMessage {
+    outputPath: string;
+    message: string;
+    status: Status;
+}

@@ -1,9 +1,9 @@
 import { fetchSwaggerJson, writeFile } from '../utils';
-import serviceSource from './service';
-import interfacesModelSource from './interfacesModel';
-import { Options } from './interfaces';
+import getApiModel from './getApiModel';
+import getInterfacesModel from './getInterfacesModel';
+import { Options, Status, GenMessage } from './interfaces';
 import parseSwaggerJson from '../parseSwaggerJson';
-import { join } from 'path';
+import { join, basename } from 'path';
 
 const interfaceModelsName = 'interfaces';
 
@@ -14,34 +14,62 @@ const swaggerApi = ({ urls, hasBasePath = true, outputPath }: Options) => {
         }
         return url;
     });
-    targetUrls.forEach(([url, dirname], index) =>
-        fetchSwaggerJson(url)
-            .then((data) => {
-                const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);
-                Object.keys(swaggerObj).forEach((key) => {
-                    const contents = serviceSource(swaggerObj[key].paths, key, hasBasePath ? basePath : '', false);
-                    writeFile(join(outputPath, `${dirname}/${key}.ts`), contents)
-                        .then(() => {
-                            console.log(`${key}.ts Saved!`);
-                        })
-                        .catch((err) => {
-                            console.error(`Failed to store ${key}.ts: ${err.message}.`);
-                        });
-                });
-
-                const interfaceModelsContent = interfacesModelSource(definitions);
-                writeFile(join(outputPath, `${dirname}/${interfaceModelsName}.ts`), interfaceModelsContent)
-                    .then(() => {
-                        console.log(`${interfaceModelsName}.ts Saved!`);
-                    })
-                    .catch((err) => {
-                        return console.error(`生成接口模型出错${err.message}`);
+    const genApis = targetUrls.map(([url, dirname], index) => {
+        return new Promise((resolve, reject) => {
+            const successMessages = [];
+            const errorMessages = [];
+            return fetchSwaggerJson(url)
+                .then((data) => {
+                    const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);
+                    const apiModelPromises = Object.keys(swaggerObj).map((key) => {
+                        const contents = getApiModel(swaggerObj[key].paths, key, hasBasePath ? basePath : '', false);
+                        const filename = join(outputPath, `${dirname}/${key}.ts`);
+                        return genFile(filename, contents);
                     });
-            })
-            .catch((e) => {
-                console.log(e);
-            }),
-    );
+                    const interfaceModelsContent = getInterfacesModel(definitions);
+                    const interfacesFilename = join(outputPath, `${dirname}/${interfaceModelsName}.ts`);
+                    const interfacesModelPromise = genFile(interfacesFilename, interfaceModelsContent);
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        });
+    });
+    return Promise.all(genApis).then((messages) => {
+        console.log(messages);
+        return messages;
+    });
 };
 
 export default swaggerApi;
+
+function genFile(filename: string, content: string) {
+    const fileBasename = basename(filename);
+    return new Promise<GenMessage>((resolve, reject) => {
+        writeFile(filename, content)
+            .then(() => {
+                resolve(getSuccessMessage(filename));
+                console.log(`${fileBasename}.ts saved!`);
+            })
+            .catch((err) => {
+                reject(getErrorMessage(filename));
+                return console.error(`Failed to store ${fileBasename}.ts:${err.message}`);
+            });
+    });
+}
+
+function getSuccessMessage(outputPath: string): GenMessage {
+    return {
+        outputPath,
+        message: `${outputPath} generation succeeded`,
+        status: Status.success,
+    };
+}
+
+function getErrorMessage(outputPath: string): GenMessage {
+    return {
+        outputPath,
+        message: `${outputPath} generation failed`,
+        status: Status.error,
+    };
+}

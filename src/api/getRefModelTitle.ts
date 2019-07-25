@@ -1,7 +1,6 @@
 import { Schema } from '../interfaces';
 
 export default (schema: Schema) => {
-    console.log(schema);
     let targetName: string = '_Error_';
     if (schema.title) {
         targetName = schema.title;

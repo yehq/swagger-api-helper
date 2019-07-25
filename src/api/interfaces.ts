@@ -32,3 +32,16 @@ export interface PayloadContent {
     typeName: string;
     description?: string;
 }
+
+// 文件生成结果的状态
+export enum Status {
+    success = 'success',
+    error = 'error',
+}
+
+// 文件生成后的返回接口
+export interface GenMessage {
+    outputPath: string;
+    message: string;
+    status: Status;
+}
