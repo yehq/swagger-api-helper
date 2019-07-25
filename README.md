@@ -2,22 +2,23 @@
 
 ### 根据 swagger url 生成 mock 数据
 
-## express
-
+## mock
+#### express
 ```
+const { mock } = require('../lib');
 const app = express();
-swaggerMock.default(app, {
+mock(app, {
     basePath: '/api',
     urls,
 });
 ```
 
-## webpack
-
+#### webpack
 ```
+const { mock } = require('../lib');
 devServer: {
     before: app => {
-        swaggerMocker.default(app, {
+        mock(app, {
             basePath: '/api',
             urls,
         });
@@ -25,8 +26,10 @@ devServer: {
 },
 ```
 
+#### interface
+
 ```
-swaggerMocker.default = (app: Application // express app, Options = {}) => void;
+mock = (app: Application // express app, Options = {}) => void;
 
 
 type PropertyResolver = (dataKey: string, type: Type, Mock: Mockjs) => any;
@@ -52,4 +55,14 @@ interface Options {
     // mock api 的 url 基本路径
     basePath?: string;
 }
+```
+
+## generate api file
+```
+const { api } = require('../lib');
+const outputPath = path.join(__dirname, './services');
+const urls = [['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'], [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2']];
+api({ urls, outputPath }).then(message => {
+    console.log(message)
+})
 ```
