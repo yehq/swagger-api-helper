@@ -1,7 +1,7 @@
 import renderRefModelTitle from './getRefModelTitle';
 import { isEnum, isLong } from './isTypes';
 import typeMap from './typeMap';
-import { Schema, Properties } from '../interfaces';
+import { Schema, Properties, Type } from '../interfaces';
 
 /**
  *
@@ -21,18 +21,18 @@ function loopInterface(schema: Schema, level = 1, translateLongToString: boolean
     };
 
     switch (type) {
-        case 'array':
+        case Type.array:
             if (schema.$$ref) return `Array<${renderRefModelTitle(schema)}>`;
             return `Array<${loopInterface(items!, level)}>`;
-        case 'object':
+        case Type.object:
             if (schema.$$ref) return renderRefModelTitle(schema);
             return getFullType(properties);
-        case 'integer':
+        case Type.integer:
             return isLong(schema) && translateLongToString ? 'string' : 'number';
-        case 'string':
+        case Type.string:
             if (isEnum(schema)) return schema.enum!.map((item) => `'${item}'`).join(' | ');
-        case 'boolean':
-        case 'file':
+        case Type.boolean:
+        case Type.file:
         default:
             return typeMap[type!];
     }

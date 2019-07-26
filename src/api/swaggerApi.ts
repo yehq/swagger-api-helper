@@ -7,7 +7,8 @@ import { join, basename } from 'path';
 
 const interfaceModelsName = 'interfaces';
 
-const swaggerApi = ({ urls, hasBasePath = true, outputPath }: Options) => {
+const swaggerApi = (options: Options) => {
+    const { urls, outputPath } = options;
     const targetUrls = urls.map((url, index) => {
         if (typeof url === 'string') {
             return [url, `swaggerApi${index}`];
@@ -15,44 +16,59 @@ const swaggerApi = ({ urls, hasBasePath = true, outputPath }: Options) => {
         return url;
     });
     const genApis = targetUrls.map(([url, dirname], index) => {
-        return new Promise<{ successMessages: GenMessage[], errorMessages: GenMessage[] }>((resolve, reject) => {
-            const successMessages: GenMessage[] = [];
-            const errorMessages: GenMessage[] = [];
-            return fetchSwaggerJson(url)
-                .then((data) => {
-                    let count = 0;
-                    const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);
-                    const apiModelPromises = Object.keys(swaggerObj).map((key) => {
-                        const contents = getApiModel(swaggerObj[key].paths, key, hasBasePath ? basePath : '', false);
-                        const filename = join(outputPath, `${dirname}/${key}.ts`);
-                        return () => genFile(filename, contents);
-                    });
-                    const interfaceModelsContent = getInterfacesModel(definitions);
-                    const interfacesFilename = join(outputPath, `${dirname}/${interfaceModelsName}.ts`);
-                    const interfacesModelPromise = () => genFile(interfacesFilename, interfaceModelsContent);
+        return new Promise<{ successMessages: GenMessage[]; errorMessages: GenMessage[] }>(
+            (resolve, reject) => {
+                const successMessages: GenMessage[] = [];
+                const errorMessages: GenMessage[] = [];
+                return fetchSwaggerJson(url)
+                    .then(data => {
+                        let count = 0;
+                        const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);
+                        const apiModelPromises = Object.keys(swaggerObj).map(key => {
+                            const filename = join(outputPath, `${dirname}/${key}.ts`);
+                            const contents = getApiModel(
+                                swaggerObj[key].paths,
+                                key,
+                                basePath,
+                                filename,
+                                options
+                            );
+                            return () => genFile(filename, contents);
+                        });
+                        const interfaceModelsContent = getInterfacesModel(definitions);
+                        const interfacesFilename = join(
+                            outputPath,
+                            `${dirname}/${interfaceModelsName}.ts`
+                        );
+                        const interfacesModelPromise = () =>
+                            genFile(interfacesFilename, interfaceModelsContent);
 
-                    const allPromises = [...apiModelPromises, interfacesModelPromise];
-                    allPromises.forEach(item => {
-                        item().then((successMessage) => {
-                            successMessages.push(successMessage)
-                        }).catch((errMessage) => {
-                            errorMessages.push(errMessage)
-                        }).finally(() => {
-                            count++
-                            if (count === allPromises.length) {
-                                resolve({
-                                    successMessages,
-                                    errorMessages,
+                        const allPromises = [...apiModelPromises, interfacesModelPromise];
+                        allPromises.forEach(item => {
+                            item()
+                                .then(successMessage => {
+                                    successMessages.push(successMessage);
+                                })
+                                .catch(errMessage => {
+                                    errorMessages.push(errMessage);
+                                })
+                                .finally(() => {
+                                    count++;
+                                    if (count === allPromises.length) {
+                                        resolve({
+                                            successMessages,
+                                            errorMessages,
+                                        });
+                                    }
                                 });
-                            }
-                        })
+                        });
                     })
-                })
-                .catch((e) => {
-                    console.log(e);
-                    reject(e);
-                });
-        });
+                    .catch(e => {
+                        console.log(e);
+                        reject(e);
+                    });
+            }
+        );
     });
     return Promise.all(genApis);
 };
@@ -67,7 +83,7 @@ function genFile(filename: string, content: string) {
                 resolve(getSuccessMessage(filename));
                 console.log(`${fileBasename} saved!`);
             })
-            .catch((err) => {
+            .catch(err => {
                 reject(getErrorMessage(filename));
                 return console.error(`Failed to store ${fileBasename}:${err.message}`);
             });

@@ -1,3 +1,4 @@
 import { CustomPath } from '../interfaces';
-declare const _default: (items: CustomPath[], key: string, basePath: string, translateLongToString?: boolean) => string;
+import { Options } from './interfaces';
+declare const _default: (items: CustomPath[], key: string, basePath: string, filename: string, { importExtraFetchOptions, importRequest, importStringify, hasExtraFetchOptions, hasBasePath, }: Options) => string;
 export default _default;

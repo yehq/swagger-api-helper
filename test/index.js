@@ -8,30 +8,49 @@ const swaggerApi = swagger.api;
 
 const app = express();
 
-const urls = [['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'], [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2']];
+const urls = [
+    ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
+    [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2'],
+];
 const outputPath = path.join(__dirname, './services');
 
 // parse application/json
 app.use(bodyParser.json());
 swaggerMock(app, {
     basePath: '/api',
-    urls: urls.map((url) => url[0]),
+    urls: urls.map(url => url[0]),
 });
 
 app.get('/genApi', (req, res) => {
-    swaggerApi({ urls, outputPath }).then(message => {
+    swaggerApi({
+        urls,
+        outputPath,
+        hasExtraFetchOptions: true,
+        importExtraFetchOptions: filename => {
+            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+            return `import { ExtraFetchOptions } from '${relativePath}';`;
+        },
+        importStringify: filename => {
+            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+            return `import { stringify } from '${relativePath}';`;
+        },
+        importRequest: filename => {
+            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+            return `import { request } from '${relativePath}';`;
+        },
+    }).then(message => {
         res.json(message);
-    })
+    });
 });
 
 app.get('/swaggerJson', (req, res) => {
-    fetchSwaggerJson(urls[0][0]).then((data) => {
+    fetchSwaggerJson(urls[0][0]).then(data => {
         res.json(data);
     });
 });
 
 app.get('/v2/swaggerJson', (req, res) => {
-    fetchSwaggerJson(urls[1][0]).then((data) => {
+    fetchSwaggerJson(urls[1][0]).then(data => {
         res.json(data);
     });
 });

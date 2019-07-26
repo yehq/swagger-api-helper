@@ -12,6 +12,26 @@ export interface Options {
     hasBasePath?: boolean;
     // 文件输出路径
     outputPath: string;
+    /**
+     * 发送请求时是否需要传入自定义的属性
+     * @default true
+     */
+    hasExtraFetchOptions?: boolean;
+    /**
+     * 返回 导入 request 的字符串
+     * @default () => `import request from '@/utils/request'`;
+     */
+    importRequest?: (path: string) => string;
+    /**
+     * 返回 导入 stringify 的字符串
+     * @default () => `import stringify from '@/utils/stringify'`;
+     */
+    importStringify?: (path: string) => string;
+    /**
+     * 返回 导入 ExtraFetchOptions 的字符串
+     * @default () => `import { ExtraFetchOptions } from '@/types'`;
+     */
+    importExtraFetchOptions?: (path: string) => string;
 }
 
 export interface InterfaceNames {

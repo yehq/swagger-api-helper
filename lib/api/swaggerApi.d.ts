@@ -1,5 +1,5 @@
 import { Options, GenMessage } from './interfaces';
-declare const swaggerApi: ({ urls, hasBasePath, outputPath }: Options) => Promise<{
+declare const swaggerApi: (options: Options) => Promise<{
     successMessages: GenMessage[];
     errorMessages: GenMessage[];
 }[]>;

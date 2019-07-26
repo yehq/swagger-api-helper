@@ -1,12 +1,17 @@
 import Mock from 'mockjs';
-import { Response, Type, Definitions, Schema, PropertyResolver } from '../interfaces';
+import { Response, Type, Definitions, Schema } from '../interfaces';
 import { isPropNameLike } from './utils';
+import { PropertyResolver } from './interfaces';
 
 const dateTimeLikePropNames = ['Date', 'Time', 'date', 'time'];
 const nameLikePropNames = ['Name', 'name'];
 const idLikePropNames = ['Id'];
 
-export default (response: Response, definitions: Definitions, propertyResolver?: PropertyResolver) => {
+export default (
+    response: Response,
+    definitions: Definitions,
+    propertyResolver?: PropertyResolver
+) => {
     return response.schema ? Mock.mock(getMockData(response.schema, definitions)) : undefined;
 
     /**
@@ -18,7 +23,9 @@ export default (response: Response, definitions: Definitions, propertyResolver?:
     function getMockData(schema: Schema, definitions: Definitions, dataKey?: string): any {
         switch (schema.type) {
             case Type.array:
-                return new Array(Mock.Random.natural(1, 10)).fill('').map(() => getMockData(schema.items!, definitions));
+                return new Array(Mock.Random.natural(1, 10))
+                    .fill('')
+                    .map(() => getMockData(schema.items!, definitions));
             case Type.object:
                 let properties = schema.properties;
                 if (!properties && schema.$$ref) {
