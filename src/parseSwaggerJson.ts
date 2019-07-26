@@ -1,11 +1,26 @@
-import { SwaggerResponse, SwaggerModel, CustomPath, Methods, In, Parameter, Path } from './interfaces';
+import {
+    SwaggerResponse,
+    SwaggerModel,
+    CustomPath,
+    Methods,
+    In,
+    Parameter,
+    Path,
+} from './interfaces';
 
+/**
+ * 获取制定 tag 的 path
+ * @param {Path} item
+ */
 const getPathsByTagName = (item: Path) => {
-    return (item.parameters || []).reduce<{ [key in In]?: Parameter<key>[] }>((paraTarget, parameter) => {
-        if (!paraTarget[parameter.in]) paraTarget[parameter.in] = [];
-        paraTarget[parameter.in]!.push(parameter as any);
-        return paraTarget;
-    }, {});
+    return (item.parameters || []).reduce<{ [key in In]?: Parameter<key>[] }>(
+        (paraTarget, parameter) => {
+            if (!paraTarget[parameter.in]) paraTarget[parameter.in] = [];
+            paraTarget[parameter.in]!.push(parameter as any);
+            return paraTarget;
+        },
+        {}
+    );
 };
 
 /**
@@ -13,7 +28,10 @@ const getPathsByTagName = (item: Path) => {
  * url 转化为 getV2UsersId
  */
 const getPathKey = (method: Methods, url: string) => {
-    return method + url.replace(/[{}]/g, '').replace(/(?:\/|-)([a-zA-Z])/g, ($, $1) => $1.toUpperCase());
+    return (
+        method +
+        url.replace(/[{}]/g, '').replace(/(?:\/|-)([a-zA-Z])/g, ($, $1) => $1.toUpperCase())
+    );
 };
 
 export default (data: SwaggerResponse) => {
@@ -26,7 +44,7 @@ export default (data: SwaggerResponse) => {
             const path = paths[pathName];
             Object.keys(path).forEach((method: string) => {
                 const item = path[method as Methods];
-                if (item && item.tags.some((tag) => tag === tagName)) {
+                if (item && item.tags.some(tag => tag === tagName)) {
                     const parametersGroup = getPathsByTagName(item);
                     customPaths.push({
                         ...item,

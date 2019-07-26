@@ -1,1 +1,0 @@
-{"version":3,"file":"isTypes.js","sourceRoot":"","sources":["../../src/api/isTypes.ts"],"names":[],"mappings":";;AAEA,wBAAwB;AACxB,SAAgB,MAAM,CAAC,EAAwB;QAAtB,cAAI,EAAE,kBAAM;IACjC,OAAO,IAAI,KAAK,SAAS,IAAI,MAAM,KAAK,OAAO,CAAC;AACpD,CAAC;AAFD,wBAEC;AAED,aAAa;AACb,SAAgB,MAAM,CAAC,EAA2B;QAAzB,mBAAe;IACpC,OAAO,KAAK,CAAC,OAAO,CAAC,SAAS,CAAC,CAAC;AACpC,CAAC;AAFD,wBAEC"}

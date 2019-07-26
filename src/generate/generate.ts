@@ -7,7 +7,7 @@ import { join, basename } from 'path';
 
 const interfaceModelsName = 'interfaces';
 
-const swaggerApi = (options: Options) => {
+const generate = (options: Options) => {
     const { urls, outputPath } = options;
     const targetUrls = urls.map((url, index) => {
         if (typeof url === 'string') {
@@ -73,7 +73,7 @@ const swaggerApi = (options: Options) => {
     return Promise.all(genApis);
 };
 
-export default swaggerApi;
+export default generate;
 
 function genFile(filename: string, content: string) {
     const fileBasename = basename(filename);
