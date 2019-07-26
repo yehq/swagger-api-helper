@@ -1,4 +1,10 @@
-# swagger-mocker
+# swagger-api-hepler
+
+## install
+
+```
+npm install swagger-api-hepler --save-dev
+```
 
 ## mock
 
