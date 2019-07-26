@@ -1,8 +1,8 @@
 # swagger-mocker
 
-### 根据 swagger url 生成 mock 数据
-
 ## mock
+
+### 根据 swagger json 数据 生成 mock 数据
 
 #### express
 
@@ -39,16 +39,18 @@ devServer: {
 | resultResolver   | (payload: { url: string; method: Methods; path: string; swaggerPath: Path }) => any | 否   | 处理单个请求 response 的 mock 结果                                       |
 | basePath         | string                                                                              | 否   | 请求 mock api 时的接口前缀                                               |
 
-## generate api file
+## generate
+
+### 根据 swagger json 数据生成 typescript 类型支持的 接口 请求方法文件，包括了 后台定义的数据模型
 
 ```ts
-const { api } = require('../lib');
+const { generate } = require('../lib');
 const outputPath = path.join(__dirname, './services');
 const urls = [
     ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
     [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2'],
 ];
-api({
+generate({
     urls,
     outputPath,
 }).then(message => {
@@ -56,7 +58,7 @@ api({
 });
 ```
 
-### api options
+### generate options
 
 | 字段                    | 类型                           | 必填 | 默认值                                              | 描述                                                                                |
 | ----------------------- | ------------------------------ | ---- | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -67,3 +69,46 @@ api({
 | importRequest           | (filename: string) => string   | 否   | () => `import request from '@/utils/request'`       | 返回 导入 request 的字符串, request 用来发请求的方法                                |
 | importStringify         | (filename: string) => string   | 否   | () => `import stringify from '@/utils/stringify'`   | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
 | importExtraFetchOptions | (filename: string) => string   | 否   | () => `import { ExtraFetchOptions } from '@/types'` | 返回 导入 ExtraFetchOptions 的字符串                                                |
+
+### 生成的文件内容
+
+```
+import { stringify } from '../../utils';
+import { request } from '../../utils';
+import { ExtraFetchOptions } from '../../utils';
+import { Pet } from './interfaces';
+
+export interface PostPetPayload extends ExtraFetchOptions {
+    /**
+     * Pet object that needs to be added to the store
+     */
+    body: Pet;
+}
+
+/**
+ * Add a new pet to the store
+ *
+ */
+export async function postPet(payload: PostPetPayload) {
+    const { body, ...extraFetchOptions } = payload;
+    return request<undefined>(`/pet`,
+        {
+            ...extraFetchOptions,
+            method: 'post',
+            body,
+        }
+    );
+}
+```
+
+```js
+// ./interfaces
+export interface Pet {
+	id?: number
+	category?: Category
+	name: string	//  example: "doggie"
+	photoUrls: Array<string>
+	tags?: Array<Tag>
+	status?: 'available' | 'pending' | 'sold'	// pet status in the store
+}
+```
