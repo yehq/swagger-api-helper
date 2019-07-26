@@ -13,7 +13,7 @@ npm install swagger-api-hepler --save-dev
 #### express
 
 ```ts
-const { mock } = require('../lib');
+const { mock } = require('swagger-api-hepler');
 const app = express();
 mock(app, {
     basePath: '/api',
@@ -24,7 +24,7 @@ mock(app, {
 #### webpack
 
 ```ts
-const { mock } = require('../lib');
+const { mock } = require('swagger-api-hepler');
 devServer: {
     before: app => {
         mock(app, {
@@ -50,7 +50,7 @@ devServer: {
 ### 根据 swagger json 数据生成 typescript 类型支持的 接口 请求方法文件，包括了 后台定义的数据模型
 
 ```ts
-const { generate } = require('../lib');
+const { generate } = require('swagger-api-hepler');
 const outputPath = path.join(__dirname, './services');
 const urls = [
     ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
