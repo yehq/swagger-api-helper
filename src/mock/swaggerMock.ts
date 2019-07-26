@@ -43,8 +43,8 @@ const swaggerMock = (
                     setRoutes(swaggerData, showMessage);
                 })
                 .catch((e: Error) => {
-                    console.log(`[swagger-mocker ERROR] ${e.message} ${e.stack}`);
-                    console.warn(`[swagger-mocker ERROR] 请求 swagger url: ${url} 失败`);
+                    console.log(`[swagger-api-mock ERROR] ${e.message} ${e.stack}`);
+                    console.warn(`[swagger-api-mock ERROR] 请求 swagger url: ${url} 失败`);
                 });
         });
     }
@@ -103,7 +103,7 @@ const swaggerMock = (
             );
         }
         if (currentShowMessage) {
-            console.log(`[swagger-mocker SUCCESS] 加载 ${swaggerData.url} 成功`);
+            console.log(`[swagger-api-mock SUCCESS] 加载 ${swaggerData.url} 成功`);
         }
     }
     /**

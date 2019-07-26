@@ -4,7 +4,7 @@ const path = require('path');
 const { fetchSwaggerJson } = require('../lib/utils');
 const swagger = require('../lib');
 const swaggerMock = swagger.mock;
-const swaggerApi = swagger.api;
+const swaggerGenerate = swagger.generate;
 
 const app = express();
 
@@ -22,7 +22,7 @@ swaggerMock(app, {
 });
 
 app.get('/genApi', (req, res) => {
-    swaggerApi({
+    swaggerGenerate({
         urls,
         outputPath,
         hasExtraFetchOptions: true,

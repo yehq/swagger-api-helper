@@ -4,45 +4,45 @@ import { ExtraFetchOptions } from '../../utils';
 import { Pet, ApiResponse } from './interfaces'
 
 
-export interface PostPetPayload extends ExtraFetchOptions {
+    export interface PostPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
 	body: Pet
 }
-
-/**
- * Add a new pet to the store
- * 
- */
-export async function postPet(payload: PostPetPayload) {
+    
+    /**
+     * Add a new pet to the store
+     * 
+     */
+    export async function postPet(payload: PostPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet`, {
+        return request<undefined>(`/pet`, {
 		...extraFetchOptions,
-        method: 'post',
+            method: 'post',
 		body,
-    });
-}
-export interface PutPetPayload extends ExtraFetchOptions {
+        });
+    }
+    export interface PutPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
 	body: Pet
 }
-
-/**
- * Update an existing pet
- * 
- */
-export async function putPet(payload: PutPetPayload) {
+    
+    /**
+     * Update an existing pet
+     * 
+     */
+    export async function putPet(payload: PutPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet`, {
+        return request<undefined>(`/pet`, {
 		...extraFetchOptions,
-        method: 'put',
+            method: 'put',
 		body,
-    });
-}
-
+        });
+    }
+    
 export interface GetPetFindByStatusQuery {
 	status: Array<'available' | 'pending' | 'sold'>	// Status values that need to be considered for filter   
 }
@@ -50,19 +50,19 @@ export interface GetPetFindByStatusQuery {
 export interface GetPetFindByStatusPayload extends ExtraFetchOptions {
 	query: GetPetFindByStatusQuery
 }
-
-/**
- * Finds Pets by status
- * 
- */
-export async function getPetFindByStatus(payload: GetPetFindByStatusPayload) {
+    
+    /**
+     * Finds Pets by status
+     * 
+     */
+    export async function getPetFindByStatus(payload: GetPetFindByStatusPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/findByStatus?${stringify(query)}`, {
+        return request<undefined>(`/pet/findByStatus?${stringify(query)}`, {
 		...extraFetchOptions,
-        method: 'get',
-    });
-}
-
+            method: 'get',
+        });
+    }
+    
 export interface GetPetFindByTagsQuery {
 	tags: Array<string>	// Tags to filter by   
 }
@@ -70,34 +70,34 @@ export interface GetPetFindByTagsQuery {
 export interface GetPetFindByTagsPayload extends ExtraFetchOptions {
 	query: GetPetFindByTagsQuery
 }
-
-/**
- * 废弃不用 Finds Pets by tags
- * @deprecated
- */
-export async function getPetFindByTags(payload: GetPetFindByTagsPayload) {
+    
+    /**
+     * 废弃不用 Finds Pets by tags
+     * @deprecated
+     */
+    export async function getPetFindByTags(payload: GetPetFindByTagsPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/findByTags?${stringify(query)}`, {
+        return request<undefined>(`/pet/findByTags?${stringify(query)}`, {
 		...extraFetchOptions,
-        method: 'get',
-    });
-}
-export interface GetPetPetIdPayload extends ExtraFetchOptions {
+            method: 'get',
+        });
+    }
+    export interface GetPetPetIdPayload extends ExtraFetchOptions {
 	petId: number
 }
-
-/**
- * Find pet by ID
- * 
- */
-export async function getPetPetId(payload: GetPetPetIdPayload) {
+    
+    /**
+     * Find pet by ID
+     * 
+     */
+    export async function getPetPetId(payload: GetPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+        return request<undefined>(`/pet/${petId}`, {
 		...extraFetchOptions,
-        method: 'get',
-    });
-}
-export interface PostPetPetIdPayload extends ExtraFetchOptions {
+            method: 'get',
+        });
+    }
+    export interface PostPetPetIdPayload extends ExtraFetchOptions {
 	petId: number
 	/**
 	 * 
@@ -109,34 +109,34 @@ export interface PostPetPetIdPayload extends ExtraFetchOptions {
 	 */
 	body: FormData
 }
-
-/**
- * Updates a pet in the store with form data
- * 
- */
-export async function postPetPetId(payload: PostPetPetIdPayload) {
+    
+    /**
+     * Updates a pet in the store with form data
+     * 
+     */
+    export async function postPetPetId(payload: PostPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+        return request<undefined>(`/pet/${petId}`, {
 		...extraFetchOptions,
-        method: 'post',
-    });
-}
-export interface DeletePetPetIdPayload extends ExtraFetchOptions {
+            method: 'post',
+        });
+    }
+    export interface DeletePetPetIdPayload extends ExtraFetchOptions {
 	petId: number
 }
-
-/**
- * Deletes a pet
- * 
- */
-export async function deletePetPetId(payload: DeletePetPetIdPayload) {
+    
+    /**
+     * Deletes a pet
+     * 
+     */
+    export async function deletePetPetId(payload: DeletePetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+        return request<undefined>(`/pet/${petId}`, {
 		...extraFetchOptions,
-        method: 'delete',
-    });
-}
-export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
+            method: 'delete',
+        });
+    }
+    export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	petId: number
 	/**
 	 * 
@@ -148,16 +148,17 @@ export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	 */
 	body: FormData
 }
-
-/**
- * uploads an image
- * 
- */
-export async function postPetPetIdUploadImage(payload: PostPetPetIdUploadImagePayload) {
+    
+    /**
+     * uploads an image
+     * 
+     */
+    export async function postPetPetIdUploadImage(payload: PostPetPetIdUploadImagePayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<ApiResponse>(`/pet/${petId}/uploadImage`, {
+        return request<ApiResponse>(`/pet/${petId}/uploadImage`, {
 		...extraFetchOptions,
-        method: 'post',
-    });
-}
-
+            method: 'post',
+        });
+    }
+    
+    

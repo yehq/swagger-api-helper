@@ -70,7 +70,7 @@ generate({
 | importStringify         | (filename: string) => string   | 否   | () => `import stringify from '@/utils/stringify'`   | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
 | importExtraFetchOptions | (filename: string) => string   | 否   | () => `import { ExtraFetchOptions } from '@/types'` | 返回 导入 ExtraFetchOptions 的字符串                                                |
 
-### 生成的文件内容
+### 部分生成的文件内容
 
 ```
 import { stringify } from '../../utils';
