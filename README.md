@@ -14,7 +14,9 @@ npm install swagger-api-hepler --save-dev
 
 ```ts
 const { mock } = require('swagger-api-hepler');
+
 const app = express();
+const urls = ['https://petstore.swagger.io/v2/swagger.json'];
 mock(app, {
     basePath: '/api',
     urls,
@@ -25,6 +27,8 @@ mock(app, {
 
 ```ts
 const { mock } = require('swagger-api-hepler');
+
+const urls = ['https://petstore.swagger.io/v2/swagger.json'];
 devServer: {
     before: app => {
         mock(app, {
