@@ -1,3 +1,24 @@
+export interface Category {
+	id?: number	
+	name?: string	
+}
+export interface Pet {
+	id?: number	
+	category?: Category	
+	name: string	//  example: "doggie"  
+	photoUrls: Array<string>	
+	tags?: Array<Tag>	
+	status?: 'available' | 'pending' | 'sold'	// pet status in the store   
+}
+export interface Tag {
+	id?: number	
+	name?: string	
+}
+export interface ApiResponse {
+	code?: number	
+	type?: string	
+	message?: string	
+}
 export interface Order {
 	id?: number	
 	petId?: number	
@@ -15,25 +36,4 @@ export interface User {
 	password?: string	
 	phone?: string	
 	userStatus?: number	// User Status   
-}
-export interface Category {
-	id?: number	
-	name?: string	
-}
-export interface Tag {
-	id?: number	
-	name?: string	
-}
-export interface Pet {
-	id?: number	
-	category?: Category	
-	name: string	//  example: "doggie"  
-	photoUrls: Array<string>	
-	tags?: Array<Tag>	
-	status?: 'available' | 'pending' | 'sold'	// pet status in the store   
-}
-export interface ApiResponse {
-	code?: number	
-	type?: string	
-	message?: string	
 }

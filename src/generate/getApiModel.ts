@@ -22,7 +22,7 @@ export default (
         importRequest = () => `import request from '@/utils/request';`,
         importStringify = () => `import stringify from '@/utils/stringify';`,
         hasExtraFetchOptions = true,
-        hasBasePath,
+        hasBasePath = true,
     }: Options
 ) => {
     const currentBasePath = hasBasePath ? basePath : '';
@@ -47,52 +47,49 @@ export default (
     function renderContent(items: CustomPath[], basePath: string) {
         const globalInterfaceNames = new Set();
         const content = `
-    ${items
-        .map(item => {
-            const {
-                pathKey,
-                url,
-                method,
-                parametersInBody = [],
-                parametersInQuery = [],
-                deprecated,
-                summary,
-            } = item;
-            const fullUrl = path.join(basePath, url);
-            const interfacePrefix = firstCharUpper(pathKey);
-            const interfaceNames = {
-                query: `${interfacePrefix}Query`,
-                body: `${interfacePrefix}Body`,
-                payload: `${interfacePrefix}Payload`,
-            };
-            const { interfaces, itemInterfaceNames, responseInterfaceName } = renderMethodInterface(
-                item,
-                interfaceNames
-            );
-            itemInterfaceNames.forEach(itemInterfaceName =>
-                globalInterfaceNames.add(itemInterfaceName)
-            );
-            const paramsString = renderParams(item);
-            return `${interfaces}
-    
-    /**
-     * ${deprecated ? '废弃不用 ' : ''}${summary}
-     * ${deprecated ? '@deprecated' : ''}
-     */
-    export async function ${pathKey}(${renderArgs(
-                interfaces,
-                interfaceNames.payload
-            )}) {${paramsString}
-        return request<${responseInterfaceName}>(\`${fullUrl}${
-                parametersInQuery.length > 0 ? '?${stringify(query)}' : ''
-            }\`, {${paramsString ? `\n\t\t...${extraFetchOptionsParaName},` : ''}
-            method: '${method}',${parametersInBody.length > 0 ? '\n\t\tbody,' : ''}
-        });
-    }
-    `;
-        })
-        .join('')}
-    `;
+${items
+    .map(item => {
+        const {
+            pathKey,
+            url,
+            method,
+            parametersInBody = [],
+            parametersInQuery = [],
+            deprecated,
+            summary,
+        } = item;
+        const fullUrl = path.join(basePath, url);
+        const interfacePrefix = firstCharUpper(pathKey);
+        const interfaceNames = {
+            query: `${interfacePrefix}Query`,
+            body: `${interfacePrefix}Body`,
+            payload: `${interfacePrefix}Payload`,
+        };
+        const { interfaces, itemInterfaceNames, responseInterfaceName } = renderMethodInterface(
+            item,
+            interfaceNames
+        );
+        itemInterfaceNames.forEach(itemInterfaceName =>
+            globalInterfaceNames.add(itemInterfaceName)
+        );
+        const paramsString = renderParams(item);
+        return `${interfaces}
+
+/**
+ * ${deprecated ? '废弃不用 ' : ''}${summary}
+ * ${deprecated ? '@deprecated' : ''}
+ */
+export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload)}) {${paramsString}
+    return request<${responseInterfaceName}>(\`${fullUrl}${
+            parametersInQuery.length > 0 ? '?${stringify(query)}' : ''
+        }\`, {${paramsString ? `\n\t\t...${extraFetchOptionsParaName},` : ''}
+        method: '${method}',${parametersInBody.length > 0 ? '\n\t\tbody,' : ''}
+    });
+}
+`;
+    })
+    .join('')}
+`;
         return {
             content,
             globalInterfaceNames: [...globalInterfaceNames],
