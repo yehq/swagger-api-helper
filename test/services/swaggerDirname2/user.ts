@@ -5,7 +5,7 @@ import { User } from './interfaces'
 
 
 export interface GetUserUsernamePayload extends ExtraFetchOptions {
-	username: string
+	username: string;
 }
 
 /**
@@ -14,17 +14,17 @@ export interface GetUserUsernamePayload extends ExtraFetchOptions {
  */
 export async function getUserUsername(payload: GetUserUsernamePayload) {
 	const { username, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/${username}`, {
+    return request<undefined>(`/v2/user/${username}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 export interface PutUserUsernamePayload extends ExtraFetchOptions {
-	username: string
+	username: string;
 	/**
 	 * Updated user object
 	 */
-	body: User
+	body: User;
 }
 
 /**
@@ -33,14 +33,14 @@ export interface PutUserUsernamePayload extends ExtraFetchOptions {
  */
 export async function putUserUsername(payload: PutUserUsernamePayload) {
 	const { username, body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/${username}`, {
+    return request<undefined>(`/v2/user/${username}`, {
 		...extraFetchOptions,
         method: 'put',
 		body,
     });
 }
 export interface DeleteUserUsernamePayload extends ExtraFetchOptions {
-	username: string
+	username: string;
 }
 
 /**
@@ -49,19 +49,25 @@ export interface DeleteUserUsernamePayload extends ExtraFetchOptions {
  */
 export async function deleteUserUsername(payload: DeleteUserUsernamePayload) {
 	const { username, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/${username}`, {
+    return request<undefined>(`/v2/user/${username}`, {
 		...extraFetchOptions,
         method: 'delete',
     });
 }
 
 export interface GetUserLoginQuery {
-	username: string	// The user name for login   
-	password: string	// The password for login in clear text   
+	/**
+	 * The user name for login
+	 */
+	username: string;
+	/**
+	 * The password for login in clear text
+	 */
+	password: string;
 }
 
 export interface GetUserLoginPayload extends ExtraFetchOptions {
-	query: GetUserLoginQuery
+	query: GetUserLoginQuery;
 }
 
 /**
@@ -70,13 +76,13 @@ export interface GetUserLoginPayload extends ExtraFetchOptions {
  */
 export async function getUserLogin(payload: GetUserLoginPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/login?${stringify(query)}`, {
+    return request<undefined>(`/v2/user/login?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 export interface GetUserLogoutPayload extends ExtraFetchOptions {
-	
+
 }
 
 /**
@@ -85,7 +91,7 @@ export interface GetUserLogoutPayload extends ExtraFetchOptions {
  */
 export async function getUserLogout(payload: GetUserLogoutPayload) {
 	const extraFetchOptions = payload;
-    return request<undefined>(`/user/logout`, {
+    return request<undefined>(`/v2/user/logout`, {
 		...extraFetchOptions,
         method: 'get',
     });
@@ -94,7 +100,7 @@ export interface PostUserPayload extends ExtraFetchOptions {
 	/**
 	 * Created user object
 	 */
-	body: User
+	body: User;
 }
 
 /**
@@ -103,7 +109,7 @@ export interface PostUserPayload extends ExtraFetchOptions {
  */
 export async function postUser(payload: PostUserPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user`, {
+    return request<undefined>(`/v2/user`, {
 		...extraFetchOptions,
         method: 'post',
 		body,
@@ -113,7 +119,7 @@ export interface PostUserCreateWithArrayPayload extends ExtraFetchOptions {
 	/**
 	 * List of user object
 	 */
-	body: User[]
+	body: User[];
 }
 
 /**
@@ -122,7 +128,7 @@ export interface PostUserCreateWithArrayPayload extends ExtraFetchOptions {
  */
 export async function postUserCreateWithArray(payload: PostUserCreateWithArrayPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/createWithArray`, {
+    return request<undefined>(`/v2/user/createWithArray`, {
 		...extraFetchOptions,
         method: 'post',
 		body,
@@ -132,7 +138,7 @@ export interface PostUserCreateWithListPayload extends ExtraFetchOptions {
 	/**
 	 * List of user object
 	 */
-	body: User[]
+	body: User[];
 }
 
 /**
@@ -141,7 +147,7 @@ export interface PostUserCreateWithListPayload extends ExtraFetchOptions {
  */
 export async function postUserCreateWithList(payload: PostUserCreateWithListPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/user/createWithList`, {
+    return request<undefined>(`/v2/user/createWithList`, {
 		...extraFetchOptions,
         method: 'post',
 		body,

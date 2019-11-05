@@ -6,7 +6,14 @@ import getInterface from './getInterface';
 import getRefModelTitle from './getRefModelTitle';
 import { isEnum } from './isTypes';
 import typeMap from './typeMap';
-import { InterfaceNames, ParaPayloadName, PayloadContent, Options } from './interfaces';
+import {
+    InterfaceNames,
+    ParaPayloadName,
+    PayloadContent,
+    Options,
+    CommentType,
+} from './interfaces';
+import renderComment from './renderComment';
 
 const extraFetchOptionsInterfaceName = 'ExtraFetchOptions';
 const extraFetchOptionsParaName = 'extraFetchOptions';
@@ -133,18 +140,12 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
     function renderPayloadInterface(items: PayloadContent[], interfaceName: string) {
         return `export interface ${interfaceName} ${
             hasExtraFetchOptions ? `extends ${extraFetchOptionsInterfaceName} ` : ''
-        }{\n\t${items
-            .map(
-                item => `${getPayloadInterfaceParaDescription(item)}${item.name}: ${item.typeName}`
-            )
-            .join('\n\t')}\n}`;
-    }
-
-    // 生成 payload 中的 description
-    function getPayloadInterfaceParaDescription(item: PayloadContent) {
-        return item.description
-            ? `/**\n\t * ${item.description.replace(/\n/g, '\n\t * ').replace(/$/g, '\n\t */\n\t')}`
-            : '';
+        }{\n${items
+            .map(item => {
+                const content = `${item.name}: ${item.typeName};`;
+                return renderComment(CommentType.multiline, item.description, content, '\t');
+            })
+            .join('\n')}\n}`;
     }
 
     /**
@@ -210,7 +211,11 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
             payloadContent.push({
                 name: ParaPayloadName.body,
                 typeName: 'FormData',
-                description: `${renderInterface(parametersInFormData, 'FormContent')}`,
+                description: `${renderInterface(
+                    parametersInFormData,
+                    'FormContent',
+                    CommentType.single
+                )}`,
             });
         }
         const payloadInterface = renderPayloadInterface(payloadContent, interfaceNames.payload);
@@ -227,7 +232,11 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
      * @param {object} parameters
      * @param {string} name
      */
-    function renderInterface(parameters: Parameter[], name: string) {
+    function renderInterface(
+        parameters: Parameter[],
+        name: string,
+        commentType: CommentType = CommentType.multiline
+    ) {
         if (parameters.length === 0) return '';
         const schema = parameters.reduce<Schema>(
             (target, item) => {
@@ -259,7 +268,7 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
                 type: Type.object,
             }
         );
-        const result = getInterface(schema, 1);
+        const result = getInterface(schema, commentType, 1);
         if (result.trim().indexOf('{') === 0) {
             return `\nexport interface ${name} ${result}\n`;
         }

@@ -65,3 +65,13 @@ export interface GenMessage {
     message: string;
     status: Status;
 }
+
+// 注释类型
+export enum CommentType {
+    // 使用单行注释且位于属性之前 (//)
+    single,
+    // 使用单行注释且位于属性后面 (//)
+    singleRight,
+    // 使用多行注释且位于属性之前 (/** */)
+    multiline,
+}

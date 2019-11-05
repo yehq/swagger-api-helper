@@ -48,3 +48,8 @@ export interface GenMessage {
     message: string;
     status: Status;
 }
+export declare enum CommentType {
+    single = 0,
+    singleRight = 1,
+    multiline = 2
+}

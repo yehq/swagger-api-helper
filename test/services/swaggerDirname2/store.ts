@@ -4,7 +4,7 @@ import { Order } from './interfaces'
 
 
 export interface GetStoreInventoryPayload extends ExtraFetchOptions {
-	
+
 }
 
 /**
@@ -13,13 +13,13 @@ export interface GetStoreInventoryPayload extends ExtraFetchOptions {
  */
 export async function getStoreInventory(payload: GetStoreInventoryPayload) {
 	const extraFetchOptions = payload;
-    return request<object>(`/store/inventory`, {
+    return request<object>(`/v2/store/inventory`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 export interface GetStoreOrderOrderIdPayload extends ExtraFetchOptions {
-	orderId: number
+	orderId: number;
 }
 
 /**
@@ -28,13 +28,13 @@ export interface GetStoreOrderOrderIdPayload extends ExtraFetchOptions {
  */
 export async function getStoreOrderOrderId(payload: GetStoreOrderOrderIdPayload) {
 	const { orderId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/store/order/${orderId}`, {
+    return request<undefined>(`/v2/store/order/${orderId}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 export interface DeleteStoreOrderOrderIdPayload extends ExtraFetchOptions {
-	orderId: number
+	orderId: number;
 }
 
 /**
@@ -43,7 +43,7 @@ export interface DeleteStoreOrderOrderIdPayload extends ExtraFetchOptions {
  */
 export async function deleteStoreOrderOrderId(payload: DeleteStoreOrderOrderIdPayload) {
 	const { orderId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/store/order/${orderId}`, {
+    return request<undefined>(`/v2/store/order/${orderId}`, {
 		...extraFetchOptions,
         method: 'delete',
     });
@@ -52,7 +52,7 @@ export interface PostStoreOrderPayload extends ExtraFetchOptions {
 	/**
 	 * order placed for purchasing the pet
 	 */
-	body: Order
+	body: Order;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface PostStoreOrderPayload extends ExtraFetchOptions {
  */
 export async function postStoreOrder(payload: PostStoreOrderPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/store/order`, {
+    return request<undefined>(`/v2/store/order`, {
 		...extraFetchOptions,
         method: 'post',
 		body,

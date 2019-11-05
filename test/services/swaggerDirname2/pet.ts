@@ -5,7 +5,7 @@ import { Pet, ApiResponse } from './interfaces'
 
 
 export interface GetPetPetIdPayload extends ExtraFetchOptions {
-	petId: number
+	petId: number;
 }
 
 /**
@@ -14,22 +14,24 @@ export interface GetPetPetIdPayload extends ExtraFetchOptions {
  */
 export async function getPetPetId(payload: GetPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+    return request<undefined>(`/v2/pet/${petId}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 export interface PostPetPetIdPayload extends ExtraFetchOptions {
-	petId: number
+	petId: number;
 	/**
 	 * 
 	 * export interface FormContent {
-	 * 	name?: string	// Updated name of the pet   
-	 * 	status?: string	// Updated status of the pet   
+	 * 	// Updated name of the pet
+	 * 	name?: string;
+	 * 	// Updated status of the pet
+	 * 	status?: string;
 	 * }
 	 * 
 	 */
-	body: FormData
+	body: FormData;
 }
 
 /**
@@ -38,13 +40,13 @@ export interface PostPetPetIdPayload extends ExtraFetchOptions {
  */
 export async function postPetPetId(payload: PostPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+    return request<undefined>(`/v2/pet/${petId}`, {
 		...extraFetchOptions,
         method: 'post',
     });
 }
 export interface DeletePetPetIdPayload extends ExtraFetchOptions {
-	petId: number
+	petId: number;
 }
 
 /**
@@ -53,22 +55,24 @@ export interface DeletePetPetIdPayload extends ExtraFetchOptions {
  */
 export async function deletePetPetId(payload: DeletePetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/${petId}`, {
+    return request<undefined>(`/v2/pet/${petId}`, {
 		...extraFetchOptions,
         method: 'delete',
     });
 }
 export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
-	petId: number
+	petId: number;
 	/**
 	 * 
 	 * export interface FormContent {
-	 * 	additionalMetadata?: string	// Additional data to pass to server   
-	 * 	file?: File	// file to upload   
+	 * 	// Additional data to pass to server
+	 * 	additionalMetadata?: string;
+	 * 	// file to upload
+	 * 	file?: File;
 	 * }
 	 * 
 	 */
-	body: FormData
+	body: FormData;
 }
 
 /**
@@ -77,7 +81,7 @@ export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
  */
 export async function postPetPetIdUploadImage(payload: PostPetPetIdUploadImagePayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<ApiResponse>(`/pet/${petId}/uploadImage`, {
+    return request<ApiResponse>(`/v2/pet/${petId}/uploadImage`, {
 		...extraFetchOptions,
         method: 'post',
     });
@@ -86,7 +90,7 @@ export interface PostPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
-	body: Pet
+	body: Pet;
 }
 
 /**
@@ -95,7 +99,7 @@ export interface PostPetPayload extends ExtraFetchOptions {
  */
 export async function postPet(payload: PostPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet`, {
+    return request<undefined>(`/v2/pet`, {
 		...extraFetchOptions,
         method: 'post',
 		body,
@@ -105,7 +109,7 @@ export interface PutPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
-	body: Pet
+	body: Pet;
 }
 
 /**
@@ -114,7 +118,7 @@ export interface PutPetPayload extends ExtraFetchOptions {
  */
 export async function putPet(payload: PutPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet`, {
+    return request<undefined>(`/v2/pet`, {
 		...extraFetchOptions,
         method: 'put',
 		body,
@@ -122,11 +126,14 @@ export async function putPet(payload: PutPetPayload) {
 }
 
 export interface GetPetFindByStatusQuery {
-	status: Array<'available' | 'pending' | 'sold'>	// Status values that need to be considered for filter   
+	/**
+	 * Status values that need to be considered for filter
+	 */
+	status: Array<'available' | 'pending' | 'sold'>;
 }
 
 export interface GetPetFindByStatusPayload extends ExtraFetchOptions {
-	query: GetPetFindByStatusQuery
+	query: GetPetFindByStatusQuery;
 }
 
 /**
@@ -135,18 +142,21 @@ export interface GetPetFindByStatusPayload extends ExtraFetchOptions {
  */
 export async function getPetFindByStatus(payload: GetPetFindByStatusPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/findByStatus?${stringify(query)}`, {
+    return request<undefined>(`/v2/pet/findByStatus?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
 
 export interface GetPetFindByTagsQuery {
-	tags: Array<string>	// Tags to filter by   
+	/**
+	 * Tags to filter by
+	 */
+	tags: Array<string>;
 }
 
 export interface GetPetFindByTagsPayload extends ExtraFetchOptions {
-	query: GetPetFindByTagsQuery
+	query: GetPetFindByTagsQuery;
 }
 
 /**
@@ -155,7 +165,7 @@ export interface GetPetFindByTagsPayload extends ExtraFetchOptions {
  */
 export async function getPetFindByTags(payload: GetPetFindByTagsPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/pet/findByTags?${stringify(query)}`, {
+    return request<undefined>(`/v2/pet/findByTags?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
