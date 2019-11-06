@@ -167,7 +167,11 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
             name: paraInPath.name,
             typeName: getType(paraInPath.type!),
         }));
-        const queryInterface = renderInterface(parametersInQuery, interfaceNames.query);
+        const queryInterface = renderInterface(
+            parametersInQuery,
+            interfaceNames.query,
+            CommentType.singleRight
+        );
         if (queryInterface) {
             payloadContent.push({
                 name: ParaPayloadName.query,
@@ -214,7 +218,7 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
                 description: `${renderInterface(
                     parametersInFormData,
                     'FormContent',
-                    CommentType.single
+                    CommentType.singleRight
                 )}`,
             });
         }
@@ -232,11 +236,7 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
      * @param {object} parameters
      * @param {string} name
      */
-    function renderInterface(
-        parameters: Parameter[],
-        name: string,
-        commentType: CommentType = CommentType.multiline
-    ) {
+    function renderInterface(parameters: Parameter[], name: string, commentType: CommentType) {
         if (parameters.length === 0) return '';
         const schema = parameters.reduce<Schema>(
             (target, item) => {

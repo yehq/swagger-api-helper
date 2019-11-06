@@ -5,16 +5,10 @@ export interface Category {
 export interface Pet {
 	id?: number;
 	category?: Category;
-	/**
-	 * example: "doggie"
-	 */
-	name: string;
+	name: string; // example: "doggie"
 	photoUrls: Array<string>;
 	tags?: Array<Tag>;
-	/**
-	 * pet status in the store
-	 */
-	status?: 'available' | 'pending' | 'sold';
+	status?: 'available' | 'pending' | 'sold'; // pet status in the store
 }
 export interface Tag {
 	id?: number;
@@ -30,10 +24,7 @@ export interface Order {
 	petId?: number;
 	quantity?: number;
 	shipDate?: string;
-	/**
-	 * Order Status
-	 */
-	status?: 'placed' | 'approved' | 'delivered';
+	status?: 'placed' | 'approved' | 'delivered'; // Order Status
 	complete?: boolean;
 }
 export interface User {
@@ -44,8 +35,5 @@ export interface User {
 	email?: string;
 	password?: string;
 	phone?: string;
-	/**
-	 * User Status
-	 */
-	userStatus?: number;
+	userStatus?: number; // User Status
 }

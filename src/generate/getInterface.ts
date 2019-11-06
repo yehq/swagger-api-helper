@@ -9,7 +9,7 @@ import renderComment from './renderComment';
  *
  * @param {object} schema { type: string, properties: schema, items: schema[]， title: string, description: string, required: string[], example: string }
  */
-function loopInterface(schema: Schema, commentType = CommentType.multiline, level = 1): string {
+function loopInterface(schema: Schema, commentType: CommentType, level = 1): string {
     const { type, properties, items, required } = schema;
     const getFullType = (model?: Properties): string => {
         if (!model) return 'any\t// 解析该字段出错 请联系后台修改格式';

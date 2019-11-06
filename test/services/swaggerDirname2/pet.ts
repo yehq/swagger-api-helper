@@ -24,10 +24,8 @@ export interface PostPetPetIdPayload extends ExtraFetchOptions {
 	/**
 	 * 
 	 * export interface FormContent {
-	 * 	// Updated name of the pet
-	 * 	name?: string;
-	 * 	// Updated status of the pet
-	 * 	status?: string;
+	 * 	name?: string; // Updated name of the pet
+	 * 	status?: string; // Updated status of the pet
 	 * }
 	 * 
 	 */
@@ -65,10 +63,8 @@ export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	/**
 	 * 
 	 * export interface FormContent {
-	 * 	// Additional data to pass to server
-	 * 	additionalMetadata?: string;
-	 * 	// file to upload
-	 * 	file?: File;
+	 * 	additionalMetadata?: string; // Additional data to pass to server
+	 * 	file?: File; // file to upload
 	 * }
 	 * 
 	 */
@@ -126,10 +122,7 @@ export async function putPet(payload: PutPetPayload) {
 }
 
 export interface GetPetFindByStatusQuery {
-	/**
-	 * Status values that need to be considered for filter
-	 */
-	status: Array<'available' | 'pending' | 'sold'>;
+	status: Array<'available' | 'pending' | 'sold'>; // Status values that need to be considered for filter
 }
 
 export interface GetPetFindByStatusPayload extends ExtraFetchOptions {
@@ -149,10 +142,7 @@ export async function getPetFindByStatus(payload: GetPetFindByStatusPayload) {
 }
 
 export interface GetPetFindByTagsQuery {
-	/**
-	 * Tags to filter by
-	 */
-	tags: Array<string>;
+	tags: Array<string>; // Tags to filter by
 }
 
 export interface GetPetFindByTagsPayload extends ExtraFetchOptions {

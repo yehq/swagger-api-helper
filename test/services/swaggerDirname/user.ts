@@ -56,14 +56,8 @@ export async function deleteUserUsername(payload: DeleteUserUsernamePayload) {
 }
 
 export interface GetUserLoginQuery {
-	/**
-	 * The user name for login
-	 */
-	username: string;
-	/**
-	 * The password for login in clear text
-	 */
-	password: string;
+	username: string; // The user name for login
+	password: string; // The password for login in clear text
 }
 
 export interface GetUserLoginPayload extends ExtraFetchOptions {
