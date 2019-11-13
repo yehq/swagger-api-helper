@@ -41,7 +41,7 @@ devServer: {
 | 字段             | 类型                                                                                | 必填 | 描述                                                                     |
 | ---------------- | ----------------------------------------------------------------------------------- | ---- | ------------------------------------------------------------------------ |
 | enableWatcher    | boolean                                                                             | 否   | 是否开启监听 api 目录, 开启后将监听目录, 目录变化时重新请求 swagger 数据 |
-| urls             | string[] \| [string, string][]                                                      | 是   | 单个 url 为数组时，第二个属性为需要监听的目录路径                        |
+| urls             | string[] \| [string, string][]                                                      | 是   | 单个 url 为数组时，第二个属性为需要监听的目录路径, 当目录中文件变化时，重新生成定义 mock 数据                        |
 | propertyResolver | (dataKey: string, type: Type, Mock: Mockjs) => any                                  | 否   | 处理单个请求 response 中的单个属性的 mock 结果                           |
 | resultResolver   | (payload: { url: string; method: Methods; path: string; swaggerPath: Path }) => any | 否   | 处理单个请求 response 的 mock 结果                                       |
 | basePath         | string                                                                              | 否   | 请求 mock api 时的接口前缀                                               |
