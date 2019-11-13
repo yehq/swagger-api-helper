@@ -52,6 +52,8 @@ devServer: {
 
 ```ts
 const { generate } = require('swagger-api-helper');
+const path = require('path');
+
 const outputPath = path.join(__dirname, './services');
 const urls = [
     ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
