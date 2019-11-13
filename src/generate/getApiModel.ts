@@ -49,7 +49,7 @@ export default (
     if (hasQuery) {
         imports.unshift(importStringify(filename));
     }
-    return `${imports.join('\n')}\n\n${content}`;
+    return content.trim() ? `${imports.join('\n')}\n\n${content}` : '';
 
     function renderContent(items: CustomPath[], basePath: string) {
         const globalInterfaceNames = new Set();
