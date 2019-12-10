@@ -45,6 +45,7 @@ export interface Schema {
     enum?: string[];
     type?: Type;
     $$ref?: string;
+    $ref?: string;
     items?: Schema;
     properties?: Properties;
     additionalProperties?: Schema;
@@ -103,9 +104,15 @@ export interface SwaggerJson {
     paths: Paths;
 }
 export interface SwaggerResponse {
-    url: string;
-    riginalSpec: any;
+    url?: string;
+    riginalSpec?: any;
     spec: SwaggerJson;
+}
+export interface SwaggerFetchOptions {
+    query?: object;
+    method?: string;
+    body?: any;
+    headers?: HeadersInit;
 }
 export interface CustomPath extends Path {
     pathKey: string;

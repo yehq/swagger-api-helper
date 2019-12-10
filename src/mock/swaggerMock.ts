@@ -2,7 +2,7 @@ import { Application } from 'express';
 import chokidar from 'chokidar';
 import pathToRegexp from 'path-to-regexp';
 import parseMockData from './parseMockData';
-import { SwaggerResponse, Methods, Paths } from '../interfaces';
+import { SwaggerResponse, Methods, Paths, SwaggerFetchOptions } from '../interfaces';
 import { fetchSwaggerJson } from '../utils';
 import { Options } from './interfaces';
 
@@ -14,6 +14,7 @@ const swaggerMock = (
         resultResolver,
         basePath: mockBasePath = '',
         enableWatcher = true,
+        fetchOptions = {},
     }: Options = {}
 ) => {
     const currentUrls = urls.map(url => (Array.isArray(url) ? url[0] : url));
@@ -36,9 +37,14 @@ const swaggerMock = (
         });
     }
 
-    function loadRouters(urls: string[], showMessage?: boolean) {
-        urls.forEach(url => {
-            fetchSwaggerJson(url)
+    function loadRouters(curUrls: string[], showMessage?: boolean) {
+        curUrls.forEach((url, index) => {
+            let currentFetchOptions: SwaggerFetchOptions | undefined = fetchOptions;
+            const targetUrl = urls[index];
+            if (Array.isArray(targetUrl)) {
+                currentFetchOptions = targetUrl[2];
+            }
+            fetchSwaggerJson(url, currentFetchOptions)
                 .then(swaggerData => {
                     setRoutes(swaggerData, showMessage);
                 })
@@ -112,7 +118,7 @@ const swaggerMock = (
      */
     function findUrlByWatchPath(watchPath: string) {
         const url = urls.find(url => Array.isArray(url) && url[1] === watchPath);
-        return url ? (url as [string, string])[0] : url;
+        return url ? (url as [string, string, SwaggerFetchOptions | undefined])[0] : url;
     }
 };
 

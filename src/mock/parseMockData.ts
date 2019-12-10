@@ -2,6 +2,7 @@ import Mock from 'mockjs';
 import { Response, Type, Definitions, Schema } from '../interfaces';
 import { isPropNameLike } from './utils';
 import { PropertyResolver } from './interfaces';
+import { getRef } from '../utils';
 
 const dateTimeLikePropNames = ['Date', 'Time', 'date', 'time'];
 const nameLikePropNames = ['Name', 'name'];
@@ -28,8 +29,9 @@ export default (
                     .map(() => getMockData(schema.items!, definitions));
             case Type.object:
                 let properties = schema.properties;
-                if (!properties && schema.$$ref) {
-                    const model = getModelByRef(definitions, schema.$$ref);
+                const ref = getRef(schema);
+                if (!properties && ref) {
+                    const model = getModelByRef(definitions, ref);
                     properties = model.properties;
                 }
                 const mockData = properties

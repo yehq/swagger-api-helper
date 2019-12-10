@@ -4,6 +4,7 @@ import typeMap from './typeMap';
 import { Schema, Properties, Type } from '../interfaces';
 import { CommentType } from './interfaces';
 import renderComment from './renderComment';
+import { getRef } from '../utils';
 
 /**
  *
@@ -29,10 +30,10 @@ function loopInterface(schema: Schema, commentType: CommentType, level = 1): str
 
     switch (type) {
         case Type.array:
-            if (schema.$$ref) return `Array<${renderRefModelTitle(schema)}>`;
+            if (getRef(schema)) return `Array<${renderRefModelTitle(schema)}>`;
             return `Array<${loopInterface(items!, level)}>`;
         case Type.object:
-            if (schema.$$ref) return renderRefModelTitle(schema);
+            if (getRef(schema)) return renderRefModelTitle(schema);
             return getFullType(properties);
         case Type.string:
             if (isEnum(schema)) return schema.enum!.map(item => `'${item}'`).join(' | ');

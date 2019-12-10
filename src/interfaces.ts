@@ -61,6 +61,7 @@ export interface Schema {
     enum?: string[];
     type?: Type;
     $$ref?: string;
+    $ref?: string;
     items?: Schema;
     properties?: Properties;
     // 存在时不存在 ref
@@ -149,9 +150,16 @@ export interface SwaggerJson {
 }
 
 export interface SwaggerResponse {
-    url: string;
-    riginalSpec: any;
+    url?: string;
+    riginalSpec?: any;
     spec: SwaggerJson;
+}
+
+export interface SwaggerFetchOptions {
+    query?: object;
+    method?: string;
+    body?: any;
+    headers?: HeadersInit;
 }
 
 export interface CustomPath extends Path {

@@ -1,6 +1,10 @@
+import { SwaggerFetchOptions } from '../interfaces';
 export declare type Url = string | [string, // swagger url
-string];
+string, // swagger url 生成接口所在对应的文件夹名称
+// swagger url 生成接口所在对应的文件夹名称
+SwaggerFetchOptions | undefined];
 export interface Options {
+    fetchOptions?: SwaggerFetchOptions;
     urls: Url[];
     hasBasePath?: boolean;
     outputPath: string;

@@ -1,11 +1,16 @@
+import { SwaggerFetchOptions } from '../interfaces';
+
 export type Url =
     | string // swagger url
     | [
           string, // swagger url
-          string // swagger url 生成接口所在对应的文件夹名称
+          string, // swagger url 生成接口所在对应的文件夹名称
+          SwaggerFetchOptions | undefined // 单个 swagger api url 请求 配置属性
       ];
 
 export interface Options {
+    // swagger api 请求 配置属性
+    fetchOptions?: SwaggerFetchOptions;
     // swagger urls
     urls: Url[];
     // 是否携带 basePath 默认 true

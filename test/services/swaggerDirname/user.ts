@@ -4,6 +4,63 @@ import { ExtraFetchOptions } from '../../utils';
 import { User } from './interfaces'
 
 
+export interface PostUserPayload extends ExtraFetchOptions {
+	/**
+	 * Created user object
+	 */
+	body: User;
+}
+
+/**
+ * Create user
+ * 
+ */
+export async function postUser(payload: PostUserPayload) {
+	const { body, ...extraFetchOptions } = payload;
+    return request<undefined>(`/v2/user`, {
+		...extraFetchOptions,
+        method: 'post',
+		body,
+    });
+}
+export interface PostUserCreateWithArrayPayload extends ExtraFetchOptions {
+	/**
+	 * List of user object
+	 */
+	body: User[];
+}
+
+/**
+ * Creates list of users with given input array
+ * 
+ */
+export async function postUserCreateWithArray(payload: PostUserCreateWithArrayPayload) {
+	const { body, ...extraFetchOptions } = payload;
+    return request<undefined>(`/v2/user/createWithArray`, {
+		...extraFetchOptions,
+        method: 'post',
+		body,
+    });
+}
+export interface PostUserCreateWithListPayload extends ExtraFetchOptions {
+	/**
+	 * List of user object
+	 */
+	body: User[];
+}
+
+/**
+ * Creates list of users with given input array
+ * 
+ */
+export async function postUserCreateWithList(payload: PostUserCreateWithListPayload) {
+	const { body, ...extraFetchOptions } = payload;
+    return request<undefined>(`/v2/user/createWithList`, {
+		...extraFetchOptions,
+        method: 'post',
+		body,
+    });
+}
 export interface GetUserUsernamePayload extends ExtraFetchOptions {
 	username: string;
 }
@@ -88,63 +145,6 @@ export async function getUserLogout(payload: GetUserLogoutPayload) {
     return request<undefined>(`/v2/user/logout`, {
 		...extraFetchOptions,
         method: 'get',
-    });
-}
-export interface PostUserPayload extends ExtraFetchOptions {
-	/**
-	 * Created user object
-	 */
-	body: User;
-}
-
-/**
- * Create user
- * 
- */
-export async function postUser(payload: PostUserPayload) {
-	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/user`, {
-		...extraFetchOptions,
-        method: 'post',
-		body,
-    });
-}
-export interface PostUserCreateWithArrayPayload extends ExtraFetchOptions {
-	/**
-	 * List of user object
-	 */
-	body: User[];
-}
-
-/**
- * Creates list of users with given input array
- * 
- */
-export async function postUserCreateWithArray(payload: PostUserCreateWithArrayPayload) {
-	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/user/createWithArray`, {
-		...extraFetchOptions,
-        method: 'post',
-		body,
-    });
-}
-export interface PostUserCreateWithListPayload extends ExtraFetchOptions {
-	/**
-	 * List of user object
-	 */
-	body: User[];
-}
-
-/**
- * Creates list of users with given input array
- * 
- */
-export async function postUserCreateWithList(payload: PostUserCreateWithListPayload) {
-	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/user/createWithList`, {
-		...extraFetchOptions,
-        method: 'post',
-		body,
     });
 }
 

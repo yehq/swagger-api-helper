@@ -17,12 +17,22 @@ const outputPath = path.join(__dirname, './services');
 // parse application/json
 app.use(bodyParser.json());
 swaggerMock(app, {
+    fetchOptions: {
+        headers: {
+            Authorization: 'Basic YWRtaW46dENmcWU4JEph',
+        },
+    },
     basePath: '/api',
     urls: urls.map(url => url[0]),
 });
 
 app.get('/genApi', (req, res) => {
     swaggerGenerate({
+        fetchOptions: {
+            headers: {
+                Authorization: 'Basic YWRtaW46dENmcWU4JEph',
+            },
+        },
         urls,
         outputPath,
         hasExtraFetchOptions: true,
@@ -55,4 +65,4 @@ app.get('/v2/swaggerJson', (req, res) => {
     });
 });
 
-app.listen(3000);
+app.listen(3100);

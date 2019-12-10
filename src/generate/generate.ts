@@ -4,23 +4,32 @@ import getInterfacesModel from './getInterfacesModel';
 import { Options, Status, GenMessage } from './interfaces';
 import parseSwaggerJson from '../parseSwaggerJson';
 import { join, basename } from 'path';
+import { SwaggerFetchOptions } from '../interfaces';
 
 const interfaceModelsName = 'interfaces';
 
 const generate = (options: Options) => {
-    const { urls, outputPath } = options;
+    const { urls, outputPath, fetchOptions } = options;
     const targetUrls = urls.map((url, index) => {
         if (typeof url === 'string') {
-            return [url, `swaggerApi${index}`];
+            return [url, `swaggerApi${index}`, fetchOptions] as [
+                string,
+                string,
+                SwaggerFetchOptions | undefined
+            ];
         }
-        return url;
+        return (url[2] ? url : [url[0], url[1], fetchOptions]) as [
+            string,
+            string,
+            SwaggerFetchOptions | undefined
+        ];
     });
-    const genApis = targetUrls.map(([url, dirname], index) => {
+    const genApis = targetUrls.map(([url, dirname, currentFetchOptions], index) => {
         return new Promise<{ successMessages: GenMessage[]; errorMessages: GenMessage[] }>(
             (resolve, reject) => {
                 const successMessages: GenMessage[] = [];
                 const errorMessages: GenMessage[] = [];
-                return fetchSwaggerJson(url)
+                return fetchSwaggerJson(url, currentFetchOptions)
                     .then(data => {
                         let count = 0;
                         const { swaggerObj, basePath, definitions } = parseSwaggerJson(data);

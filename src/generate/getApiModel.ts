@@ -1,7 +1,7 @@
 import { CustomPath, Type, Parameter, Response, Schema } from '../interfaces';
 
 import path from 'path';
-import { firstCharUpper } from '../utils';
+import { firstCharUpper, getRef } from '../utils';
 import getInterface from './getInterface';
 import getRefModelTitle from './getRefModelTitle';
 import { isEnum } from './isTypes';
@@ -186,10 +186,10 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
                 return type === 'array' ? `${typeName}[]` : typeName;
             };
             // 处理对象
-            if (target.schema.$$ref) {
+            if (getRef(target.schema)) {
                 typeName = getRefModelTitle(target.schema);
                 typeName = addInterfaceName(typeName, target.schema.type!);
-            } else if (target.schema.items && target.schema.items.$$ref) {
+            } else if (target.schema.items && getRef(target.schema.items)) {
                 // 处理数组
                 typeName = getRefModelTitle(target.schema.items);
                 typeName = addInterfaceName(typeName, target.schema.type!);

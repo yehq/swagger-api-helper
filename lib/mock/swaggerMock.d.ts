@@ -1,4 +1,4 @@
 import { Application } from 'express';
 import { Options } from './interfaces';
-declare const swaggerMock: (app: Application, { urls, propertyResolver, resultResolver, basePath: mockBasePath, enableWatcher, }?: Options) => void;
+declare const swaggerMock: (app: Application, { urls, propertyResolver, resultResolver, basePath: mockBasePath, enableWatcher, fetchOptions, }?: Options) => void;
 export default swaggerMock;

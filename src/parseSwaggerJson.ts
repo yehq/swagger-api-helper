@@ -36,7 +36,7 @@ const getPathKey = (method: Methods, url: string) => {
 
 export default (data: SwaggerResponse) => {
     const {
-        spec: { basePath, paths, tags, definitions },
+        spec: { basePath, paths, tags = [], definitions },
     } = data;
 
     const getPathsGroupByTagName = (tagName: string) => {
