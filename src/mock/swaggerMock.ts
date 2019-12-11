@@ -79,16 +79,13 @@ const swaggerMock = (
                     message: '没找到该 url 的api',
                 });
             } else {
-                const responsesStatus = Object.keys(path.responses);
-                const status = responsesStatus.includes('200')
-                    ? '200'
-                    : responsesStatus[0] || '200';
-
-                let result = parseMockData(
-                    path.responses[status] || {},
-                    definitions,
-                    propertyResolver
-                );
+                const { responses = {} } = path;
+                let status = '200';
+                if (Object.keys(responses).length > 0) {
+                    const statuses = Object.keys(responses);
+                    status = statuses.find(item => +item >= 200 && +item < 300) || statuses[0];
+                }
+                let result = parseMockData(responses[status] || {}, definitions, propertyResolver);
                 if (resultResolver) {
                     result = resultResolver({
                         url: req.url,
