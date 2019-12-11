@@ -27,7 +27,7 @@ export default (
         importExtraFetchOptions = () =>
             `import { ${extraFetchOptionsInterfaceName} } from '@/types';`,
         importRequest = () => `import request from '@/utils/request';`,
-        importStringify = () => `import stringify from '@/utils/stringify';`,
+        importStringify = () => `import { stringify } from 'swagger-api-helper';`,
         hasExtraFetchOptions = true,
         hasBasePath = true,
     }: Options
@@ -64,6 +64,7 @@ ${items
             parametersInQuery = [],
             deprecated,
             summary,
+            description,
         } = item;
         const fullUrl = path.join(basePath, url);
         const interfacePrefix = firstCharUpper(pathKey);
@@ -80,12 +81,8 @@ ${items
             globalInterfaceNames.add(itemInterfaceName)
         );
         const paramsString = renderParams(item);
-        return `${interfaces}
 
-/**
- * ${deprecated ? '废弃不用 ' : ''}${summary}
- * ${deprecated ? '@deprecated' : ''}
- */
+        const functionString = `
 export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload)}) {${paramsString}
     return request<${responseInterfaceName}>(\`${fullUrl}${
             parametersInQuery.length > 0 ? '?${stringify(query)}' : ''
@@ -93,6 +90,21 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
         method: '${method}',${parametersInBody.length > 0 ? '\n\t\tbody,' : ''}
     });
 }
+        `.trim();
+
+        return `${interfaces}
+    
+${renderComment(
+    CommentType.multiline,
+    `
+${deprecated ? '废弃不用 ' : ''}
+${deprecated ? '@deprecated' : ''}
+${summary ? `@summary ${summary}` : ''}
+${description ? `@description ${description}` : ''}
+`.trim(),
+    functionString
+)}
+
 `;
     })
     .join('')}
@@ -159,7 +171,7 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
             parametersInBody = [],
             parametersInFormData = [],
             parametersInPath = [],
-            responses,
+            responses = {},
         } = item;
         const itemInterfaceNames: string[] = [];
         let responseInterfaceName: string | undefined = Type.any;
@@ -198,9 +210,15 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
             }
             return typeName;
         };
-        Object.keys(responses).forEach(status => {
+        /**
+         * 获取 response 中 status 为 [200, 300) 的结果作为返回值
+         * 没有 则取第一个
+         */
+        if (Object.keys(responses).length > 0) {
+            const statuses = Object.keys(responses);
+            const status = statuses.find(item => +item >= 200 && +item < 300) || statuses[0];
             responseInterfaceName = getTypeName(responses[status]);
-        });
+        }
         if (parametersInBody.length > 0) {
             const body = parametersInBody[0];
             const typeName = getTypeName(body);
@@ -240,21 +258,14 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
         if (parameters.length === 0) return '';
         const schema = parameters.reduce<Schema>(
             (target, item) => {
-                // 特殊处理 body 中的 request 对象
-                if (item.schema) {
-                    target.properties = item.schema.properties;
-                    target.items = item.schema.items;
-                    target.type = item.schema.type;
-                } else {
-                    if (!target.properties) {
-                        target.properties = {};
-                    }
-                    const { required, ...rest } = item;
-                    target.properties[item.name] = {
-                        type: Type.object,
-                        ...rest,
-                    };
+                if (!target.properties) {
+                    target.properties = {};
                 }
+                const { required, ...rest } = item;
+                target.properties[item.name] = {
+                    type: Type.object,
+                    ...rest,
+                };
                 return target;
             },
             {
@@ -269,6 +280,9 @@ export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload
             }
         );
         const result = getInterface(schema, commentType, 1);
+        if (!result) {
+            return `\nexport type ${name} = any`;
+        }
         if (result.trim().indexOf('{') === 0) {
             return `\nexport interface ${name} ${result}\n`;
         }

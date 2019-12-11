@@ -36,12 +36,26 @@ const getPathKey = (method: Methods, url: string) => {
 
 export default (data: SwaggerResponse) => {
     const {
-        spec: { basePath, paths, tags = [], definitions },
+        spec: { basePath = '', paths, definitions },
     } = data;
+
+    const tags =
+        data.spec.tags ||
+        [
+            ...Object.values(paths).reduce((target, path) => {
+                Object.values(path).forEach(item => {
+                    if (item) {
+                        item.tags.forEach(tag => target.add(tag));
+                    }
+                });
+                return target;
+            }, new Set<string>()),
+        ].map(item => ({ name: item, description: item }));
 
     const getPathsGroupByTagName = (tagName: string) => {
         return Object.keys(paths).reduce((customPaths: CustomPath[], pathName) => {
             const path = paths[pathName];
+
             Object.keys(path).forEach((method: string) => {
                 const item = path[method as Methods];
                 if (item && item.tags.some(tag => tag === tagName)) {

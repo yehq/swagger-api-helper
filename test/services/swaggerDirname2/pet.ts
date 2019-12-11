@@ -1,24 +1,25 @@
-import { stringify } from '../../utils';
-import { request } from '../../utils';
-import { ExtraFetchOptions } from '../../utils';
+import { stringify } from 'swagger-api-helper';
+import request from '@/utils/request';
+import { ExtraFetchOptions } from '@/types';
 import { Pet, ApiResponse } from './interfaces'
 
 
 export interface GetPetPetIdPayload extends ExtraFetchOptions {
 	petId: number;
 }
-
+    
 /**
- * Find pet by ID
- * 
+ * @summary Find pet by ID
+ * @description Returns a single pet
  */
 export async function getPetPetId(payload: GetPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/pet/${petId}`, {
+    return request<Pet>(`/v2/pet/${petId}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 export interface PostPetPetIdPayload extends ExtraFetchOptions {
 	petId: number;
 	/**
@@ -31,10 +32,9 @@ export interface PostPetPetIdPayload extends ExtraFetchOptions {
 	 */
 	body: FormData;
 }
-
+    
 /**
- * Updates a pet in the store with form data
- * 
+ * @summary Updates a pet in the store with form data
  */
 export async function postPetPetId(payload: PostPetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
@@ -43,13 +43,13 @@ export async function postPetPetId(payload: PostPetPetIdPayload) {
         method: 'post',
     });
 }
+
 export interface DeletePetPetIdPayload extends ExtraFetchOptions {
 	petId: number;
 }
-
+    
 /**
- * Deletes a pet
- * 
+ * @summary Deletes a pet
  */
 export async function deletePetPetId(payload: DeletePetPetIdPayload) {
 	const { petId, ...extraFetchOptions } = payload;
@@ -58,6 +58,7 @@ export async function deletePetPetId(payload: DeletePetPetIdPayload) {
         method: 'delete',
     });
 }
+
 export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	petId: number;
 	/**
@@ -70,10 +71,9 @@ export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	 */
 	body: FormData;
 }
-
+    
 /**
- * uploads an image
- * 
+ * @summary uploads an image
  */
 export async function postPetPetIdUploadImage(payload: PostPetPetIdUploadImagePayload) {
 	const { petId, ...extraFetchOptions } = payload;
@@ -82,16 +82,16 @@ export async function postPetPetIdUploadImage(payload: PostPetPetIdUploadImagePa
         method: 'post',
     });
 }
+
 export interface PostPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
 	body: Pet;
 }
-
+    
 /**
- * Add a new pet to the store
- * 
+ * @summary Add a new pet to the store
  */
 export async function postPet(payload: PostPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
@@ -101,16 +101,16 @@ export async function postPet(payload: PostPetPayload) {
 		body,
     });
 }
+
 export interface PutPetPayload extends ExtraFetchOptions {
 	/**
 	 * Pet object that needs to be added to the store
 	 */
 	body: Pet;
 }
-
+    
 /**
- * Update an existing pet
- * 
+ * @summary Update an existing pet
  */
 export async function putPet(payload: PutPetPayload) {
 	const { body, ...extraFetchOptions } = payload;
@@ -121,6 +121,7 @@ export async function putPet(payload: PutPetPayload) {
     });
 }
 
+
 export interface GetPetFindByStatusQuery {
 	status: Array<'available' | 'pending' | 'sold'>; // Status values that need to be considered for filter
 }
@@ -128,18 +129,19 @@ export interface GetPetFindByStatusQuery {
 export interface GetPetFindByStatusPayload extends ExtraFetchOptions {
 	query: GetPetFindByStatusQuery;
 }
-
+    
 /**
- * Finds Pets by status
- * 
+ * @summary Finds Pets by status
+ * @description Multiple status values can be provided with comma separated strings
  */
 export async function getPetFindByStatus(payload: GetPetFindByStatusPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/pet/findByStatus?${stringify(query)}`, {
+    return request<Pet[]>(`/v2/pet/findByStatus?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 
 export interface GetPetFindByTagsQuery {
 	tags: Array<string>; // Tags to filter by
@@ -148,16 +150,19 @@ export interface GetPetFindByTagsQuery {
 export interface GetPetFindByTagsPayload extends ExtraFetchOptions {
 	query: GetPetFindByTagsQuery;
 }
-
+    
 /**
- * 废弃不用 Finds Pets by tags
+ * 废弃不用 
  * @deprecated
+ * @summary Finds Pets by tags
+ * @description Multiple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.
  */
 export async function getPetFindByTags(payload: GetPetFindByTagsPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/pet/findByTags?${stringify(query)}`, {
+    return request<Pet[]>(`/v2/pet/findByTags?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 

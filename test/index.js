@@ -28,6 +28,9 @@ swaggerMock(app, {
 
 app.get('/genApi', (req, res) => {
     swaggerGenerate({
+        tagAlias: {
+            pet: 'petAlias',
+        },
         fetchOptions: {
             headers: {
                 Authorization: 'Basic YWRtaW46dENmcWU4JEph',
@@ -36,18 +39,18 @@ app.get('/genApi', (req, res) => {
         urls,
         outputPath,
         hasExtraFetchOptions: true,
-        importExtraFetchOptions: filename => {
-            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
-            return `import { ExtraFetchOptions } from '${relativePath}';`;
-        },
-        importStringify: filename => {
-            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
-            return `import { stringify } from '${relativePath}';`;
-        },
-        importRequest: filename => {
-            const relativePath = path.join(path.relative(filename, outputPath), 'utils');
-            return `import { request } from '${relativePath}';`;
-        },
+        // importExtraFetchOptions: filename => {
+        //     const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+        //     return `import { ExtraFetchOptions } from '${relativePath}';`;
+        // },
+        // importStringify: filename => {
+        //     const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+        //     return `import { stringify } from '${relativePath}';`;
+        // },
+        // importRequest: filename => {
+        //     const relativePath = path.join(path.relative(filename, outputPath), 'utils');
+        //     return `import { request } from '${relativePath}';`;
+        // },
     }).then(message => {
         res.json(message);
     });

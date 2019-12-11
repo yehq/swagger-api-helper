@@ -1,15 +1,15 @@
-import { request } from '../../utils';
-import { ExtraFetchOptions } from '../../utils';
+import request from '@/utils/request';
+import { ExtraFetchOptions } from '@/types';
 import { Order } from './interfaces'
 
 
 export interface GetStoreInventoryPayload extends ExtraFetchOptions {
 
 }
-
+    
 /**
- * Returns pet inventories by status
- * 
+ * @summary Returns pet inventories by status
+ * @description Returns a map of status codes to quantities
  */
 export async function getStoreInventory(payload: GetStoreInventoryPayload) {
 	const extraFetchOptions = payload;
@@ -18,28 +18,30 @@ export async function getStoreInventory(payload: GetStoreInventoryPayload) {
         method: 'get',
     });
 }
+
 export interface GetStoreOrderOrderIdPayload extends ExtraFetchOptions {
 	orderId: number;
 }
-
+    
 /**
- * Find purchase order by ID
- * 
+ * @summary Find purchase order by ID
+ * @description For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions
  */
 export async function getStoreOrderOrderId(payload: GetStoreOrderOrderIdPayload) {
 	const { orderId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/store/order/${orderId}`, {
+    return request<Order>(`/v2/store/order/${orderId}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 export interface DeleteStoreOrderOrderIdPayload extends ExtraFetchOptions {
 	orderId: number;
 }
-
+    
 /**
- * Delete purchase order by ID
- * 
+ * @summary Delete purchase order by ID
+ * @description For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors
  */
 export async function deleteStoreOrderOrderId(payload: DeleteStoreOrderOrderIdPayload) {
 	const { orderId, ...extraFetchOptions } = payload;
@@ -48,23 +50,24 @@ export async function deleteStoreOrderOrderId(payload: DeleteStoreOrderOrderIdPa
         method: 'delete',
     });
 }
+
 export interface PostStoreOrderPayload extends ExtraFetchOptions {
 	/**
 	 * order placed for purchasing the pet
 	 */
 	body: Order;
 }
-
+    
 /**
- * Place an order for a pet
- * 
+ * @summary Place an order for a pet
  */
 export async function postStoreOrder(payload: PostStoreOrderPayload) {
 	const { body, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/store/order`, {
+    return request<Order>(`/v2/store/order`, {
 		...extraFetchOptions,
         method: 'post',
 		body,
     });
 }
+
 

@@ -1,6 +1,6 @@
-import { stringify } from '../../utils';
-import { request } from '../../utils';
-import { ExtraFetchOptions } from '../../utils';
+import { stringify } from 'swagger-api-helper';
+import request from '@/utils/request';
+import { ExtraFetchOptions } from '@/types';
 import { User } from './interfaces'
 
 
@@ -10,10 +10,10 @@ export interface PostUserPayload extends ExtraFetchOptions {
 	 */
 	body: User;
 }
-
+    
 /**
- * Create user
- * 
+ * @summary Create user
+ * @description This can only be done by the logged in user.
  */
 export async function postUser(payload: PostUserPayload) {
 	const { body, ...extraFetchOptions } = payload;
@@ -23,16 +23,16 @@ export async function postUser(payload: PostUserPayload) {
 		body,
     });
 }
+
 export interface PostUserCreateWithArrayPayload extends ExtraFetchOptions {
 	/**
 	 * List of user object
 	 */
 	body: User[];
 }
-
+    
 /**
- * Creates list of users with given input array
- * 
+ * @summary Creates list of users with given input array
  */
 export async function postUserCreateWithArray(payload: PostUserCreateWithArrayPayload) {
 	const { body, ...extraFetchOptions } = payload;
@@ -42,16 +42,16 @@ export async function postUserCreateWithArray(payload: PostUserCreateWithArrayPa
 		body,
     });
 }
+
 export interface PostUserCreateWithListPayload extends ExtraFetchOptions {
 	/**
 	 * List of user object
 	 */
 	body: User[];
 }
-
+    
 /**
- * Creates list of users with given input array
- * 
+ * @summary Creates list of users with given input array
  */
 export async function postUserCreateWithList(payload: PostUserCreateWithListPayload) {
 	const { body, ...extraFetchOptions } = payload;
@@ -61,21 +61,22 @@ export async function postUserCreateWithList(payload: PostUserCreateWithListPayl
 		body,
     });
 }
+
 export interface GetUserUsernamePayload extends ExtraFetchOptions {
 	username: string;
 }
-
+    
 /**
- * Get user by user name
- * 
+ * @summary Get user by user name
  */
 export async function getUserUsername(payload: GetUserUsernamePayload) {
 	const { username, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/user/${username}`, {
+    return request<User>(`/v2/user/${username}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 export interface PutUserUsernamePayload extends ExtraFetchOptions {
 	username: string;
 	/**
@@ -83,10 +84,10 @@ export interface PutUserUsernamePayload extends ExtraFetchOptions {
 	 */
 	body: User;
 }
-
+    
 /**
- * Updated user
- * 
+ * @summary Updated user
+ * @description This can only be done by the logged in user.
  */
 export async function putUserUsername(payload: PutUserUsernamePayload) {
 	const { username, body, ...extraFetchOptions } = payload;
@@ -96,13 +97,14 @@ export async function putUserUsername(payload: PutUserUsernamePayload) {
 		body,
     });
 }
+
 export interface DeleteUserUsernamePayload extends ExtraFetchOptions {
 	username: string;
 }
-
+    
 /**
- * Delete user
- * 
+ * @summary Delete user
+ * @description This can only be done by the logged in user.
  */
 export async function deleteUserUsername(payload: DeleteUserUsernamePayload) {
 	const { username, ...extraFetchOptions } = payload;
@@ -112,6 +114,7 @@ export async function deleteUserUsername(payload: DeleteUserUsernamePayload) {
     });
 }
 
+
 export interface GetUserLoginQuery {
 	username: string; // The user name for login
 	password: string; // The password for login in clear text
@@ -120,25 +123,24 @@ export interface GetUserLoginQuery {
 export interface GetUserLoginPayload extends ExtraFetchOptions {
 	query: GetUserLoginQuery;
 }
-
+    
 /**
- * Logs user into the system
- * 
+ * @summary Logs user into the system
  */
 export async function getUserLogin(payload: GetUserLoginPayload) {
 	const { query, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/user/login?${stringify(query)}`, {
+    return request<string>(`/v2/user/login?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
     });
 }
+
 export interface GetUserLogoutPayload extends ExtraFetchOptions {
 
 }
-
+    
 /**
- * Logs out current logged in user session
- * 
+ * @summary Logs out current logged in user session
  */
 export async function getUserLogout(payload: GetUserLogoutPayload) {
 	const extraFetchOptions = payload;
@@ -147,4 +149,5 @@ export async function getUserLogout(payload: GetUserLogoutPayload) {
         method: 'get',
     });
 }
+
 

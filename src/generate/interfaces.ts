@@ -9,6 +9,7 @@ export type Url =
       ];
 
 export interface Options {
+    tagAlias?: TagAlias;
     // swagger api 请求 配置属性
     fetchOptions?: SwaggerFetchOptions;
     // swagger urls
@@ -37,6 +38,14 @@ export interface Options {
      * @default () => `import { ExtraFetchOptions } from '@/types'`;
      */
     importExtraFetchOptions?: (path: string) => string;
+}
+
+/**
+ * swagger tag 别名
+ * 用作生成的文件夹名称
+ */
+export interface TagAlias {
+    [key: string]: string;
 }
 
 export interface InterfaceNames {

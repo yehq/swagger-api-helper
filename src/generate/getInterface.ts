@@ -11,7 +11,7 @@ import { getRef } from '../utils';
  * @param {object} schema { type: string, properties: schema, items: schema[]， title: string, description: string, required: string[], example: string }
  */
 function loopInterface(schema: Schema, commentType: CommentType, level = 1): string {
-    const { type, properties, items, required } = schema;
+    const { properties, items, required } = schema;
     const getFullType = (model?: Properties): string => {
         if (!model) return 'any\t// 解析该字段出错 请联系后台修改格式';
         const tabs = new Array(level).fill('\t').join('');
@@ -27,6 +27,13 @@ function loopInterface(schema: Schema, commentType: CommentType, level = 1): str
         });
         return `{\n${items.join('\n')}\n${new Array(level - 1).fill('\t').join('')}}`;
     };
+    let type = schema.type;
+    /**
+     * 当 type 不存在，但是存在 properties 时，当作 object 处理
+     */
+    if (!type && properties && Object.keys(properties).length > 0) {
+        type = Type.object;
+    }
 
     switch (type) {
         case Type.array:

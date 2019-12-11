@@ -130,8 +130,9 @@ export type Path = {
     operationId: string;
     parameters?: Parameter[];
     produces: string[];
-    responses: { [key: string]: Response };
-    summary: string;
+    responses?: { [key: string]: Response };
+    summary?: string;
+    description?: string;
     tags: string[];
     __originalOperationId?: string;
 };
