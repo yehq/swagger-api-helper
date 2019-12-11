@@ -1,6 +1,4 @@
 import { CustomPath, Type, Parameter, Response, Schema } from '../interfaces';
-
-import path from 'path';
 import { firstCharUpper, getRef } from '../utils';
 import getInterface from './getInterface';
 import getRefModelTitle from './getRefModelTitle';
@@ -14,6 +12,7 @@ import {
     CommentType,
 } from './interfaces';
 import renderComment from './renderComment';
+import defaultRenderFunction from './defaultRenderFunction';
 
 const extraFetchOptionsInterfaceName = 'ExtraFetchOptions';
 const extraFetchOptionsParaName = 'extraFetchOptions';
@@ -30,24 +29,38 @@ export default (
         importStringify = () => `import { stringify } from 'swagger-api-helper';`,
         hasExtraFetchOptions = true,
         hasBasePath = true,
+        renderFunction,
+        extraImport,
     }: Options
 ) => {
     const currentBasePath = hasBasePath ? basePath : '';
-    const imports = [
+    let imports = [
         importRequest(filename),
         hasExtraFetchOptions && importExtraFetchOptions(filename),
     ].filter(Boolean);
     const { content, globalInterfaceNames, hasQuery } = renderContent(items, currentBasePath);
+    /**
+     * swagger models 接口导入
+     */
+    const globalInterfaceNamesImport = `import { ${globalInterfaceNames.join(', ')} } from '${key
+        .split('/')
+        .map((item, index) => (index === 0 ? './' : '../'))
+        .join('')}interfaces';`;
     if (globalInterfaceNames.length > 0) {
-        imports.push(
-            `import { ${globalInterfaceNames.join(', ')} } from '${key
-                .split('/')
-                .map((item, index) => (index === 0 ? './' : '../'))
-                .join('')}interfaces'`
-        );
+        imports.push(globalInterfaceNamesImport);
     }
     if (hasQuery) {
         imports.unshift(importStringify(filename));
+    }
+    /**
+     * 存在 renderFunction 时
+     * 只需要引入 全局接口类型 和自定义导入
+     */
+    if (renderFunction) {
+        imports = [globalInterfaceNamesImport];
+    }
+    if (extraImport) {
+        imports.unshift(extraImport);
     }
     return content.trim() ? `${imports.join('\n')}\n\n${content}` : '';
 
@@ -62,16 +75,17 @@ ${items
             method,
             parametersInBody = [],
             parametersInQuery = [],
+            parametersInPath = [],
             deprecated,
             summary,
             description,
         } = item;
-        const fullUrl = path.join(basePath, url);
         const interfacePrefix = firstCharUpper(pathKey);
         const interfaceNames = {
             query: `${interfacePrefix}Query`,
             body: `${interfacePrefix}Body`,
             payload: `${interfacePrefix}Payload`,
+            params: `${interfacePrefix}Params`,
         };
         const { interfaces, itemInterfaceNames, responseInterfaceName } = renderMethodInterface(
             item,
@@ -80,17 +94,37 @@ ${items
         itemInterfaceNames.forEach(itemInterfaceName =>
             globalInterfaceNames.add(itemInterfaceName)
         );
-        const paramsString = renderParams(item);
 
-        const functionString = `
-export async function ${pathKey}(${renderArgs(interfaces, interfaceNames.payload)}) {${paramsString}
-    return request<${responseInterfaceName}>(\`${fullUrl}${
-            parametersInQuery.length > 0 ? '?${stringify(query)}' : ''
-        }\`, {${paramsString ? `\n\t\t...${extraFetchOptionsParaName},` : ''}
-        method: '${method}',${parametersInBody.length > 0 ? '\n\t\tbody,' : ''}
-    });
-}
-        `.trim();
+        const paramsTypeMap = parametersInPath.reduce<{ [name: string]: string }>(
+            (target, item) => {
+                target[item.name] = getType(item.type!);
+                return target;
+            },
+            {}
+        );
+
+        const hasBody = parametersInBody.length > 0;
+        const hasParams = parametersInPath.length > 0;
+        const parametersHasQuery = parametersInQuery.length > 0;
+        const currentRenderFunction = renderFunction || defaultRenderFunction;
+        const functionString = currentRenderFunction(
+            {
+                basePath,
+                url,
+                name: pathKey,
+                method,
+                hasBody,
+                hasParams,
+                hasQuery: parametersHasQuery,
+                responseType: responseInterfaceName || 'undefined',
+                payloadType: interfaces ? interfaceNames.payload : undefined,
+                paramsType: hasParams ? interfaceNames.params : undefined,
+                queryType: parametersHasQuery ? interfaceNames.query : undefined,
+                paramsTypeMap: paramsTypeMap,
+                extraFetchOptionsParaName,
+            },
+            item
+        ).trim();
 
         return `${interfaces}
     
@@ -114,35 +148,6 @@ ${description ? `@description ${description}` : ''}
             globalInterfaceNames: [...globalInterfaceNames],
             hasQuery: items.some(item => (item.parametersInQuery || []).length > 0),
         };
-    }
-
-    /**
-     * 返回 方法中的参数内容  如  const { body, query, ...extraFetchOptions } = payload;
-     * @param {object} item
-     */
-    function renderParams(item: CustomPath) {
-        const { parametersInPath = [], parametersInBody = [], parametersInQuery = [] } = item;
-        const params = [
-            ...(parametersInPath.length > 0 ? parametersInPath.map(({ name }) => name) : []),
-            ...(parametersInBody.length > 0 ? ['body'] : []),
-            ...(parametersInQuery.length > 0 ? ['query'] : []),
-        ];
-        const paramsString = `{ ${params.join(', ')}, ...${extraFetchOptionsParaName} }`;
-        return `\n\tconst ${
-            params.length === 0 ? extraFetchOptionsParaName : paramsString
-        } = payload;`;
-    }
-
-    /**
-     * 返回方法参数  如 payload: Payload
-     * @param {string} interfaces
-     * @param {object} payloadInterfaceName
-     */
-    function renderArgs(interfaces: string, payloadInterfaceName: string) {
-        if (interfaces) {
-            return `payload: ${payloadInterfaceName}`;
-        }
-        return '';
     }
 
     /**

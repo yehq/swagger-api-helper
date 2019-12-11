@@ -8,6 +8,8 @@ const swaggerGenerate = swagger.generate;
 
 const app = express();
 
+const Authorization = '';
+
 const urls = [
     ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
     [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2'],
@@ -19,7 +21,7 @@ app.use(bodyParser.json());
 swaggerMock(app, {
     fetchOptions: {
         headers: {
-            Authorization: 'Basic YWRtaW46dENmcWU4JEph',
+            Authorization,
         },
     },
     basePath: '/api',
@@ -33,7 +35,7 @@ app.get('/genApi', (req, res) => {
         },
         fetchOptions: {
             headers: {
-                Authorization: 'Basic YWRtaW46dENmcWU4JEph',
+                Authorization,
             },
         },
         urls,

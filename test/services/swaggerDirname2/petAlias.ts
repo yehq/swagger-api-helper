@@ -1,7 +1,8 @@
+123123123123
 import { stringify } from 'swagger-api-helper';
 import request from '@/utils/request';
 import { ExtraFetchOptions } from '@/types';
-import { Pet, ApiResponse } from './interfaces'
+import { Pet, ApiResponse } from './interfaces';
 
 
 export interface GetPetPetIdPayload extends ExtraFetchOptions {

@@ -1,7 +1,8 @@
+123123123123
 import { stringify } from 'swagger-api-helper';
 import request from '@/utils/request';
 import { ExtraFetchOptions } from '@/types';
-import { User } from './interfaces'
+import { User } from './interfaces';
 
 
 export interface PostUserPayload extends ExtraFetchOptions {

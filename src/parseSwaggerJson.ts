@@ -30,7 +30,7 @@ const getPathsByTagName = (item: Path) => {
 const getPathKey = (method: Methods, url: string) => {
     return (
         method +
-        url.replace(/[{}]/g, '').replace(/(?:\/|-)([a-zA-Z])/g, ($, $1) => $1.toUpperCase())
+        url.replace(/[{}]/g, '').replace(/(?:\/|-|_|\.)([a-zA-Z])/g, ($, $1) => $1.toUpperCase())
     );
 };
 
