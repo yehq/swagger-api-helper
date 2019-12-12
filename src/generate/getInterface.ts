@@ -37,7 +37,7 @@ function loopInterface(schema: Schema, commentType: CommentType, level = 1): str
 
     switch (type) {
         case Type.array:
-            if (getRef(schema)) return `Array<${renderRefModelTitle(schema)}>`;
+            if (getRef(items || {})) return `Array<${renderRefModelTitle(items || {})}>`;
             return `Array<${loopInterface(items!, level)}>`;
         case Type.object:
             if (getRef(schema)) return renderRefModelTitle(schema);

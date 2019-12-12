@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const { fetchSwaggerJson } = require('../lib/utils');
 const swagger = require('../lib');
+
 const swaggerMock = swagger.mock;
 const swaggerGenerate = swagger.generate;
 

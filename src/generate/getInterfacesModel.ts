@@ -11,6 +11,9 @@ export default (definitions: Definitions) => {
                 ...definitions[key],
             });
             const interfaceContent = getInterface(definitions[key], CommentType.singleRight);
+            if ('CollectionResponseRegionsModelTemp' === interfaceName) {
+                console.log(definitions[key], definitions[key].properties.filter);
+            }
             return interfaceContent.trim().indexOf('{') === 0
                 ? `export interface ${interfaceName} ${interfaceContent}`
                 : `export type ${interfaceName} = ${interfaceContent}`;
