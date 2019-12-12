@@ -26,7 +26,7 @@ export default (
         importExtraFetchOptions = () =>
             `import { ${extraFetchOptionsInterfaceName} } from '@/types';`,
         importRequest = () => `import request from '@/utils/request';`,
-        importStringify = () => `import { stringify } from 'swagger-api-helper';`,
+        importStringify = () => `import stringify from '@/utils/stringify';`,
         hasExtraFetchOptions = true,
         hasBasePath = true,
         renderFunction,

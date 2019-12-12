@@ -1,5 +1,4 @@
-123123123123
-import { stringify } from 'swagger-api-helper';
+import stringify from '@/utils/stringify';
 import request from '@/utils/request';
 import { ExtraFetchOptions } from '@/types';
 import { Pet, ApiResponse } from './interfaces';

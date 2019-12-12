@@ -101,9 +101,9 @@ generate({
 | outputPath              | string                                                                               | 是   | -                                                      | 生成文件输出的路径                                                                  |
 | hasBasePath             | boolean                                                                              | 否   | true                                                   | 生成的 API 接口中 url 属性是否需要携带 swagger 中的 basePath                        |
 | hasExtraFetchOptions    | string                                                                               | 否   | true                                                   | 发送请求时是否需要传入自定义的属性, 为 false 时, importExtraFetchOptions 不会被调用 |
-| importRequest           | (filename: string) => string                                                         | 否   | () => `import request from '@/utils/request'`          | 返回 导入 request 的字符串, request 用来发请求的方法                                |
-| importStringify         | (filename: string) => string                                                         | 否   | () => `import { stringify } from 'swagger-api-helper'` | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
-| importExtraFetchOptions | (filename: string) => string                                                         | 否   | () => `import { ExtraFetchOptions } from '@/types'`    | 返回 导入 ExtraFetchOptions 的字符串                                                |
+| importRequest           | (filename: string) => string                                                         | 否   | () => `import request from '@/utils/request';`          | 返回 导入 request 的字符串, request 用来发请求的方法                                |
+| importStringify         | (filename: string) => string                                                         | 否   | () => `import stringify from '@/utils/stringify';` | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
+| importExtraFetchOptions | (filename: string) => string                                                         | 否   | () => `import { ExtraFetchOptions } from '@/types';`    | 返回 导入 ExtraFetchOptions 的字符串                                                |
 
 ### 部分生成的文件内容
 

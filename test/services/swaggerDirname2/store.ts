@@ -1,4 +1,3 @@
-123123123123
 import request from '@/utils/request';
 import { ExtraFetchOptions } from '@/types';
 import { Order } from './interfaces';
