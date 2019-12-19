@@ -4,10 +4,10 @@ export interface Category {
 }
 export interface Pet {
 	id?: number;
-	category?: undefined;
+	category?: Category;
 	name: string; // example: "doggie"
 	photoUrls: Array<string>;
-	tags?: Array<undefined>;
+	tags?: Array<tag>;
 	status?: 'available' | 'pending' | 'sold'; // pet status in the store
 }
 export interface Tag {

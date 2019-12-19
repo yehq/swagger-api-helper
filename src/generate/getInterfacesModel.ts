@@ -14,6 +14,9 @@ export default (definitions: Definitions) => {
             if ('CollectionResponseRegionsModelTemp' === interfaceName) {
                 console.log(definitions[key], definitions[key].properties.filter);
             }
+            if (interfaceName === 'AliyunStsFeignResponse') {
+                console.log(definitions[key], '----')
+            }
             return interfaceContent.trim().indexOf('{') === 0
                 ? `export interface ${interfaceName} ${interfaceContent}`
                 : `export type ${interfaceName} = ${interfaceContent}`;

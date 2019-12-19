@@ -18,6 +18,9 @@ function loopInterface(schema: Schema, commentType: CommentType, level = 1): str
         const items = Object.keys(model).map(key => {
             const target = model[key];
             const isRequired = Array.isArray(required) ? required.indexOf(key) > -1 : required;
+            if (key === 'credentials') {
+                console.log(target)
+            }
             const content = `${key}${isRequired ? '' : '?'}: ${loopInterface(
                 target,
                 commentType,
@@ -29,9 +32,9 @@ function loopInterface(schema: Schema, commentType: CommentType, level = 1): str
     };
     let type = schema.type;
     /**
-     * 当 type 不存在，但是存在 properties 时，当作 object 处理
+     * 当 type 不存在，当作 object 处理
      */
-    if (!type && properties && Object.keys(properties).length > 0) {
+    if (!type) {
         type = Type.object;
     }
 
