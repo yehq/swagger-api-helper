@@ -18,6 +18,8 @@ const app = express();
 const urls = ['https://petstore.swagger.io/v2/swagger.json'];
 mock(app, {
     basePath: '/api',
+    // 是否允许所有跨域 默认 false
+    cors: false,
     urls,
     fetchOptions: {
         headers: {
@@ -36,6 +38,8 @@ devServer: {
         mock(app, {
             basePath: '/api',
             urls,
+            // 是否允许所有跨域 默认 false
+            cors: false,
         });
     },
 },
@@ -51,6 +55,7 @@ devServer: {
 | propertyResolver | (dataKey: string, type: Type, Mock: Mockjs) => any                                  | 否   | 处理单个请求 response 中的单个属性的 mock 结果                                                                       |
 | resultResolver   | (payload: { url: string; method: Methods; path: string; swaggerPath: Path }) => any | 否   | 处理单个请求 response 的 mock 结果                                                                                   |
 | basePath         | string                                                                              | 否   | 请求 mock api 时的接口前缀                                                                                           |
+| cors             | boolean                                                                             | 否   | 默认 false, 是否开启跨域                                                                                             |
 
 ## generate
 
@@ -91,19 +96,19 @@ generate({
 
 ### generate options
 
-| 字段                    | 类型                                                                                 | 必填 | 默认值                                                 | 描述                                                                                |
-| ----------------------- | ------------------------------------------------------------------------------------ | ---- | ------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| urls                    | string[] \| [string, string, { headers, query, method, body }][]                     | 是   | -                                                      | 单个 url 为数组时，第二个属性为生成文件的名称, 第三个属性为 请求属性                |
-| fetchOptions            | { headers, query, method, body }                                                     | 否   | -                                                      | swagger 请求 属性 包括 header, body, method, query                                  |
-| extraImport             | string                                                                               | 否   | -                                                      | 生成文件的顶部 import 字符串, 自定义 renderFunction 时可能需要                      |
-| renderFunction          | { options: RenderFunctionOptions, path: CustomPath } 参考 src/generate/interfaces.ts | 否   | -                                                      | 自定义生成的请求方法                                                                |
-| tagAlias                | { [key: string]: string }                                                            | 否   | -                                                      | 生成的文件名默认使用 tag，配置 tagAlias 能修改生成的文件名称                        |
-| outputPath              | string                                                                               | 是   | -                                                      | 生成文件输出的路径                                                                  |
-| hasBasePath             | boolean                                                                              | 否   | true                                                   | 生成的 API 接口中 url 属性是否需要携带 swagger 中的 basePath                        |
-| hasExtraFetchOptions    | string                                                                               | 否   | true                                                   | 发送请求时是否需要传入自定义的属性, 为 false 时, importExtraFetchOptions 不会被调用 |
-| importRequest           | (filename: string) => string                                                         | 否   | () => `import request from '@/utils/request';`          | 返回 导入 request 的字符串, request 用来发请求的方法                                |
-| importStringify         | (filename: string) => string                                                         | 否   | () => `import stringify from '@/utils/stringify';` | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
-| importExtraFetchOptions | (filename: string) => string                                                         | 否   | () => `import { ExtraFetchOptions } from '@/types';`    | 返回 导入 ExtraFetchOptions 的字符串                                                |
+| 字段                    | 类型                                                                                 | 必填 | 默认值                                               | 描述                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------ | ---- | ---------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| urls                    | string[] \| [string, string, { headers, query, method, body }][]                     | 是   | -                                                    | 单个 url 为数组时，第二个属性为生成文件的名称, 第三个属性为 请求属性                |
+| fetchOptions            | { headers, query, method, body }                                                     | 否   | -                                                    | swagger 请求 属性 包括 header, body, method, query                                  |
+| extraImport             | string                                                                               | 否   | -                                                    | 生成文件的顶部 import 字符串, 自定义 renderFunction 时可能需要                      |
+| renderFunction          | { options: RenderFunctionOptions, path: CustomPath } 参考 src/generate/interfaces.ts | 否   | -                                                    | 自定义生成的请求方法                                                                |
+| tagAlias                | { [key: string]: string }                                                            | 否   | -                                                    | 生成的文件名默认使用 tag，配置 tagAlias 能修改生成的文件名称                        |
+| outputPath              | string                                                                               | 是   | -                                                    | 生成文件输出的路径                                                                  |
+| hasBasePath             | boolean                                                                              | 否   | true                                                 | 生成的 API 接口中 url 属性是否需要携带 swagger 中的 basePath                        |
+| hasExtraFetchOptions    | string                                                                               | 否   | true                                                 | 发送请求时是否需要传入自定义的属性, 为 false 时, importExtraFetchOptions 不会被调用 |
+| importRequest           | (filename: string) => string                                                         | 否   | () => `import request from '@/utils/request';`       | 返回 导入 request 的字符串, request 用来发请求的方法                                |
+| importStringify         | (filename: string) => string                                                         | 否   | () => `import stringify from '@/utils/stringify';`   | 返回 导入 stringify 方法的字符串, stringify 用来处理 url 上的 query 值              |
+| importExtraFetchOptions | (filename: string) => string                                                         | 否   | () => `import { ExtraFetchOptions } from '@/types';` | 返回 导入 ExtraFetchOptions 的字符串                                                |
 
 ### 部分生成的文件内容
 

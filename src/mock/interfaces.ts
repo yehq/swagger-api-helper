@@ -31,4 +31,6 @@ export interface Options {
     resultResolver?: ResultResolver;
     // mock api 的 url 基本路径
     basePath?: string;
+    // 是否允许所有跨域 默认 false
+    cors?: boolean;
 }

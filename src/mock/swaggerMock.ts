@@ -15,6 +15,7 @@ const swaggerMock = (
         basePath: mockBasePath = '',
         enableWatcher = true,
         fetchOptions = {},
+        cors = false,
     }: Options = {}
 ) => {
     const currentUrls = urls.map(url => (Array.isArray(url) ? url[0] : url));
@@ -61,6 +62,11 @@ const swaggerMock = (
             spec: { paths, definitions, basePath },
         } = swaggerData;
         app.all(`${mockBasePath}${basePath}/*`, (req, res, next) => {
+            if (cors) {
+                res.header('Access-Control-Allow-Origin', '*');
+                res.header('Access-Control-Allow-Methods', '*');
+                res.header('Access-Control-Allow-Headers', '*');
+            }
             const targetPath = req.path.split(`${mockBasePath}${basePath}`)[1];
             const currentPaths = matchPath(targetPath, paths);
             const currentPath = currentPaths.find(
