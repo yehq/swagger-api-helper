@@ -22,7 +22,9 @@ export default (
      * @param dataKey
      */
     function getMockData(schema: Schema, definitions: Definitions, dataKey?: string): any {
-        switch (schema.type) {
+        // type 不存在时，当作 object 处理
+        const type = schema.type || Type.object;
+        switch (type) {
             case Type.array:
                 return new Array(Mock.Random.natural(1, 10))
                     .fill('')

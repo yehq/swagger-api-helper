@@ -1,7 +1,7 @@
 import { Mockjs } from 'mockjs';
 import { Type, Methods, Path, SwaggerFetchOptions } from '../interfaces';
 
-export type PropertyResolver = (dataKey: string, type: Type, Mock: Mockjs) => any;
+export type PropertyResolver = (dataKey: string, type: Type | undefined, Mock: Mockjs) => any;
 export type ResultResolver = (payload: {
     url: string;
     method: Methods;
