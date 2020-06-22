@@ -1,63 +1,8 @@
 import stringify from '@/utils/stringify';
 import request from '@/utils/request';
 import { ExtraFetchOptions } from '@/types';
-import { Pet, ApiResponse } from './interfaces';
+import { ApiResponse, Pet } from './interfaces';
 
-
-export interface GetPetPetIdPayload extends ExtraFetchOptions {
-	petId: number;
-}
-    
-/**
- * @summary Find pet by ID
- * @description Returns a single pet
- */
-export async function getPetPetId(payload: GetPetPetIdPayload) {
-	const { petId, ...extraFetchOptions } = payload;
-    return request<Pet>(`/v2/pet/${petId}`, {
-		...extraFetchOptions,
-        method: 'get',
-    });
-}
-
-export interface PostPetPetIdPayload extends ExtraFetchOptions {
-	petId: number;
-	/**
-	 * 
-	 * export interface FormContent {
-	 * 	name?: string; // Updated name of the pet
-	 * 	status?: string; // Updated status of the pet
-	 * }
-	 * 
-	 */
-	body: FormData;
-}
-    
-/**
- * @summary Updates a pet in the store with form data
- */
-export async function postPetPetId(payload: PostPetPetIdPayload) {
-	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/pet/${petId}`, {
-		...extraFetchOptions,
-        method: 'post',
-    });
-}
-
-export interface DeletePetPetIdPayload extends ExtraFetchOptions {
-	petId: number;
-}
-    
-/**
- * @summary Deletes a pet
- */
-export async function deletePetPetId(payload: DeletePetPetIdPayload) {
-	const { petId, ...extraFetchOptions } = payload;
-    return request<undefined>(`/v2/pet/${petId}`, {
-		...extraFetchOptions,
-        method: 'delete',
-    });
-}
 
 export interface PostPetPetIdUploadImagePayload extends ExtraFetchOptions {
 	petId: number;
@@ -162,6 +107,61 @@ export async function getPetFindByTags(payload: GetPetFindByTagsPayload) {
     return request<Pet[]>(`/v2/pet/findByTags?${stringify(query)}`, {
 		...extraFetchOptions,
         method: 'get',
+    });
+}
+
+export interface GetPetPetIdPayload extends ExtraFetchOptions {
+	petId: number;
+}
+    
+/**
+ * @summary Find pet by ID
+ * @description Returns a single pet
+ */
+export async function getPetPetId(payload: GetPetPetIdPayload) {
+	const { petId, ...extraFetchOptions } = payload;
+    return request<Pet>(`/v2/pet/${petId}`, {
+		...extraFetchOptions,
+        method: 'get',
+    });
+}
+
+export interface PostPetPetIdPayload extends ExtraFetchOptions {
+	petId: number;
+	/**
+	 * 
+	 * export interface FormContent {
+	 * 	name?: string; // Updated name of the pet
+	 * 	status?: string; // Updated status of the pet
+	 * }
+	 * 
+	 */
+	body: FormData;
+}
+    
+/**
+ * @summary Updates a pet in the store with form data
+ */
+export async function postPetPetId(payload: PostPetPetIdPayload) {
+	const { petId, ...extraFetchOptions } = payload;
+    return request<undefined>(`/v2/pet/${petId}`, {
+		...extraFetchOptions,
+        method: 'post',
+    });
+}
+
+export interface DeletePetPetIdPayload extends ExtraFetchOptions {
+	petId: number;
+}
+    
+/**
+ * @summary Deletes a pet
+ */
+export async function deletePetPetId(payload: DeletePetPetIdPayload) {
+	const { petId, ...extraFetchOptions } = payload;
+    return request<undefined>(`/v2/pet/${petId}`, {
+		...extraFetchOptions,
+        method: 'delete',
     });
 }
 

@@ -1,3 +1,8 @@
+export interface ApiResponse {
+	code?: number;
+	type?: string;
+	message?: string;
+}
 export interface Category {
 	id?: number;
 	name?: string;
@@ -7,17 +12,12 @@ export interface Pet {
 	category?: Category;
 	name: string; // example: "doggie"
 	photoUrls: Array<string>;
-	tags?: Array<tag>;
+	tags?: Array<Tag>;
 	status?: 'available' | 'pending' | 'sold'; // pet status in the store
 }
 export interface Tag {
 	id?: number;
 	name?: string;
-}
-export interface ApiResponse {
-	code?: number;
-	type?: string;
-	message?: string;
 }
 export interface Order {
 	id?: number;

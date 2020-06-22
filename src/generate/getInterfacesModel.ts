@@ -7,16 +7,10 @@ export default (definitions: Definitions) => {
     return Object.keys(definitions)
         .map(key => {
             const interfaceName = renderRefModelTitle({
-                title: key,
                 ...definitions[key],
+                title: key,
             });
             const interfaceContent = getInterface(definitions[key], CommentType.singleRight);
-            if ('CollectionResponseRegionsModelTemp' === interfaceName) {
-                console.log(definitions[key], definitions[key].properties.filter);
-            }
-            if (interfaceName === 'AliyunStsFeignResponse') {
-                console.log(definitions[key], '----')
-            }
             return interfaceContent.trim().indexOf('{') === 0
                 ? `export interface ${interfaceName} ${interfaceContent}`
                 : `export type ${interfaceName} = ${interfaceContent}`;

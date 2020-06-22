@@ -6,8 +6,6 @@ export default (schema: Schema) => {
     const ref = getRef(schema);
     if (schema.title) {
         targetName = schema.title;
-    } else if (schema.xml && schema.xml.name) {
-        targetName = schema.xml.name;
     } else if (ref) {
         targetName = ref.substr(ref.lastIndexOf('/') + 1);
         targetName = targetName.replace('models.', '');

@@ -3,19 +3,22 @@ import { ExtraFetchOptions } from '@/types';
 import { Order } from './interfaces';
 
 
-export interface GetStoreInventoryPayload extends ExtraFetchOptions {
-
+export interface PostStoreOrderPayload extends ExtraFetchOptions {
+	/**
+	 * order placed for purchasing the pet
+	 */
+	body: Order;
 }
     
 /**
- * @summary Returns pet inventories by status
- * @description Returns a map of status codes to quantities
+ * @summary Place an order for a pet
  */
-export async function getStoreInventory(payload: GetStoreInventoryPayload) {
-	const extraFetchOptions = payload;
-    return request<object>(`/v2/store/inventory`, {
+export async function postStoreOrder(payload: PostStoreOrderPayload) {
+	const { body, ...extraFetchOptions } = payload;
+    return request<Order>(`/v2/store/order`, {
 		...extraFetchOptions,
-        method: 'get',
+        method: 'post',
+		body,
     });
 }
 
@@ -51,22 +54,19 @@ export async function deleteStoreOrderOrderId(payload: DeleteStoreOrderOrderIdPa
     });
 }
 
-export interface PostStoreOrderPayload extends ExtraFetchOptions {
-	/**
-	 * order placed for purchasing the pet
-	 */
-	body: Order;
+export interface GetStoreInventoryPayload extends ExtraFetchOptions {
+
 }
     
 /**
- * @summary Place an order for a pet
+ * @summary Returns pet inventories by status
+ * @description Returns a map of status codes to quantities
  */
-export async function postStoreOrder(payload: PostStoreOrderPayload) {
-	const { body, ...extraFetchOptions } = payload;
-    return request<Order>(`/v2/store/order`, {
+export async function getStoreInventory(payload: GetStoreInventoryPayload) {
+	const extraFetchOptions = payload;
+    return request<object>(`/v2/store/inventory`, {
 		...extraFetchOptions,
-        method: 'post',
-		body,
+        method: 'get',
     });
 }
 

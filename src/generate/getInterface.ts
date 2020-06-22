@@ -13,14 +13,11 @@ import { getRef } from '../utils';
 function loopInterface(schema: Schema, commentType: CommentType, level = 1): string {
     const { properties, items, required } = schema;
     const getFullType = (model?: Properties): string => {
-        if (!model) return 'any\t// 解析该字段出错 请联系后台修改格式';
+        if (!model) return 'any';
         const tabs = new Array(level).fill('\t').join('');
         const items = Object.keys(model).map(key => {
             const target = model[key];
             const isRequired = Array.isArray(required) ? required.indexOf(key) > -1 : required;
-            if (key === 'credentials') {
-                console.log(target)
-            }
             const content = `${key}${isRequired ? '' : '?'}: ${loopInterface(
                 target,
                 commentType,

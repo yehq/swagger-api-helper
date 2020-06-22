@@ -94,7 +94,6 @@ function genFile(filename: string, content: string) {
         writeFile(filename, content)
             .then(() => {
                 resolve(getSuccessMessage(filename));
-                console.log(`${fileBasename} saved!`);
             })
             .catch(err => {
                 reject(getErrorMessage(filename));
