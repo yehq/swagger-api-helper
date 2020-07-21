@@ -4,6 +4,10 @@ export type Url =
     | string // swagger url
     | [
           string, // swagger url
+          string // swagger url 生成接口所在对应的文件夹名称
+      ]
+    | [
+          string, // swagger url
           string, // swagger url 生成接口所在对应的文件夹名称
           SwaggerFetchOptions | undefined // 单个 swagger api url 请求 配置属性
       ];

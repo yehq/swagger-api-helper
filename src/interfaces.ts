@@ -76,32 +76,6 @@ export interface Schema {
     allowEmptyValue?: boolean;
 }
 
-// 请求参数基本类型
-// export interface BaseParameter<T = In> {
-//     // 默认值
-//     default?: any;
-//     format?: Format;
-//     description: string;
-//     in: T;
-//     name: string;
-//     required: boolean;
-//     type?: Type;
-//     allowEmptyValue?: boolean;
-// }
-
-// 数组参数
-// export interface ArrayParameter extends BaseParameter {
-//     type: Type.array;
-//     collectionFormat: string;
-//     items: Schema;
-// }
-
-// 对象参数
-// export interface ObjectParameter extends BaseParameter {
-//     schema: Schema;
-//     type: undefined;
-// }
-
 // 请求参数类型
 export interface Parameter<T = In> {
     // 默认值

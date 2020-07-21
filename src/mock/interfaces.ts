@@ -14,6 +14,11 @@ export type Url =
     | [
           string, // swagger url
           // 需要监听的路由 监听变化来改变mock
+          string
+      ]
+    | [
+          string, // swagger url
+          // 需要监听的路由 监听变化来改变mock
           string,
           SwaggerFetchOptions | undefined // 单个 swagger api url 请求 配置属性
       ];
