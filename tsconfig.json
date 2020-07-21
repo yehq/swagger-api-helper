@@ -17,5 +17,5 @@
         "esModuleInterop": true,
         "experimentalDecorators": true
     },
-    "exclude": ["lib", "test", "node_modules", "example"]
+    "exclude": ["lib", "__test__", "node_modules", "example", "server"]
 }

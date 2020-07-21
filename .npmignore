@@ -1,5 +1,4 @@
 node_modules
-test
 example
 yarn.lock
 package-lock.json
@@ -7,3 +6,8 @@ yarn-error.log
 .prettierrc.json
 config.test.js
 .history
+server
+
+__test__
+jest.config.js
+tsconfig.test.json

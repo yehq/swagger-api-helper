@@ -24,6 +24,14 @@ swaggerMock(app, {
 
 app.get('/genApi', (req, res) => {
     swaggerGenerate({
+        tagAlias: {
+            pet: 'petAlias',
+        },
+        fetchOptions: {
+            headers: {
+                Authorization: '',
+            },
+        },
         urls,
         outputPath,
         hasExtraFetchOptions: true,
