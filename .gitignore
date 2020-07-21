@@ -1,4 +1,4 @@
 node_modules
 lib
-config.test.js
+testConfig.js
 .history

@@ -4,7 +4,7 @@ yarn.lock
 package-lock.json
 yarn-error.log
 .prettierrc.json
-config.test.js
+testConfig.js
 .history
 server
 

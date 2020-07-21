@@ -62,7 +62,7 @@ devServer: {
 ### 根据 swagger json 数据生成 typescript 类型支持的 接口 请求方法文件，包括了 后台定义的数据模型
 
 ```ts
-const { generate } = require('swagger-api-helper');
+const { generate, ApiGenerator } = require('swagger-api-helper');
 const path = require('path');
 
 const outputPath = path.join(__dirname, './services');
@@ -70,7 +70,8 @@ const urls = [
     ['https://petstore.swagger.io/v2/swagger.json', 'swaggerDirname'],
     [`https://petstore.swagger.io/v2/swagger.json`, 'swaggerDirname2'],
 ];
-generate({
+
+const options = {
     // swagger json url 地址
     urls,
     // 生成的文件 输入路径
@@ -89,9 +90,23 @@ generate({
             Authorization: 'Basic YWRtaW46dENmcWU4JEph',
         },
     },
-}).then(message => {
+};
+
+// 第一种方式
+generate(options).then(message => {
     console.log(message);
 });
+
+/**
+ * 第二种方式
+ * 拆分了 发起请求 和 生成文件
+ */
+
+(async () {
+    const apiGenerator = new ApiGenerator(options);
+    await apiGenerator.fetch();
+    const messages = await apiGenerator.generate();
+})()
 ```
 
 ### generate options

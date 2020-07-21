@@ -116,11 +116,17 @@ export enum Status {
     error = 'error',
 }
 
-// 文件生成后的返回接口
+// 单文件生成后的返回信息接口
 export interface GenMessage {
     outputPath: string;
     message: string;
     status: Status;
+}
+
+// 一个 swagger 地址 生成后的返回信息接口
+export interface GenMessageWrapper {
+    successMessages: GenMessage[];
+    errorMessages: GenMessage[];
 }
 
 // 注释类型
