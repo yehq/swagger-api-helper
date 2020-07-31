@@ -1,6 +1,6 @@
 {
     "name": "swagger-api-helper",
-    "version": "1.0.22",
+    "version": "1.0.23",
     "description": "express",
     "main": "./lib/index.js",
     "type": "./lib/index.d.ts",

@@ -21,6 +21,10 @@ export interface Options {
     renderFunction?: (options: RenderFunctionOptions, path: CustomPath) => string;
     // 生成的文件名，别名设置，用来自定义文件名，默认将 tag 做文件名
     tagAlias?: TagAlias;
+    // 需要生成的接口(使用 tag 来匹配) 优先级大于 exclude
+    include?: RegExp | string[];
+    // 不需要生成的接口(使用 tag 来匹配)
+    exclude?: RegExp | string[];
     // swagger api 请求 配置属性
     fetchOptions?: SwaggerFetchOptions;
     // swagger urls
@@ -137,4 +141,26 @@ export enum CommentType {
     singleRight,
     // 使用多行注释且位于属性之前 (/** */)
     multiline,
+}
+
+/**
+ * 需要生成的 interface 结构
+ */
+export interface InterfaceModel {
+    /**
+     * interface 字符串形式的结构
+     */
+    content: string;
+    /**
+     * 这个 interface 关联的 其他 interface 名称
+     */
+    relatedInterfaceNames: string[];
+}
+
+/**
+ * 需要生成的 一个文件 结构
+ */
+export interface ApiModel extends InterfaceModel {
+    // 是否存在 query 参数
+    hasQuery: boolean;
 }

@@ -10,6 +10,7 @@ import {
     PayloadContent,
     Options,
     CommentType,
+    ApiModel,
 } from './interfaces';
 import renderComment from './renderComment';
 import defaultRenderFunction from './defaultRenderFunction';
@@ -32,22 +33,22 @@ export default (
         renderFunction,
         extraImport,
     }: Options
-) => {
+): ApiModel => {
     const currentBasePath = hasBasePath ? basePath : '';
     let imports = [
         importRequest(filename),
         hasExtraFetchOptions && importExtraFetchOptions(filename),
     ].filter(Boolean);
-    const { content, globalInterfaceNames, hasQuery } = renderContent(items, currentBasePath);
+    const { content, relatedInterfaceNames, hasQuery } = renderContent(items, currentBasePath);
     /**
      * swagger models 接口导入
      */
-    const globalInterfaceNamesImport = `import { ${globalInterfaceNames.join(', ')} } from '${key
+    const relatedInterfaceNamesImport = `import { ${relatedInterfaceNames.join(', ')} } from '${key
         .split('/')
         .map((item, index) => (index === 0 ? './' : '../'))
         .join('')}interfaces';`;
-    if (globalInterfaceNames.length > 0) {
-        imports.push(globalInterfaceNamesImport);
+    if (relatedInterfaceNames.length > 0) {
+        imports.push(relatedInterfaceNamesImport);
     }
     if (hasQuery) {
         imports.unshift(importStringify(filename));
@@ -57,15 +58,20 @@ export default (
      * 只需要引入 全局接口类型 和自定义导入
      */
     if (renderFunction) {
-        imports = [globalInterfaceNamesImport];
+        imports = [relatedInterfaceNamesImport];
     }
     if (extraImport) {
         imports.unshift(extraImport);
     }
-    return content.trim() ? `${imports.join('\n')}\n\n${content}` : '';
+    return {
+        content: content.trim() ? `${imports.join('\n')}\n\n${content}` : '',
+        relatedInterfaceNames,
+        hasQuery,
+    };
 
     function renderContent(items: CustomPath[], basePath: string) {
-        const globalInterfaceNames = new Set();
+        // 当前需要 从 interfaces 引入的接口名称
+        const relatedInterfaceNames = new Set<string>();
         const content = `
 ${items
     .map(item => {
@@ -92,7 +98,7 @@ ${items
             interfaceNames
         );
         itemInterfaceNames.forEach(itemInterfaceName =>
-            globalInterfaceNames.add(itemInterfaceName)
+            relatedInterfaceNames.add(itemInterfaceName)
         );
 
         const paramsTypeMap = parametersInPath.reduce<{ [name: string]: string }>(
@@ -145,7 +151,8 @@ ${description ? `@description ${description}` : ''}
 `;
         return {
             content,
-            globalInterfaceNames: [...globalInterfaceNames],
+            relatedInterfaceNames: [...relatedInterfaceNames],
+            // 是否存在 query 参数
             hasQuery: items.some(item => (item.parametersInQuery || []).length > 0),
         };
     }
@@ -284,7 +291,7 @@ ${description ? `@description ${description}` : ''}
                 type: Type.object,
             }
         );
-        const result = getInterface(schema, commentType, 1);
+        const { content: result } = getInterface(schema, commentType, 1);
         if (!result) {
             return `\nexport type ${name} = any`;
         }

@@ -7,6 +7,7 @@ import { removeFolder } from '../utils';
 it('generate services', async () => {
     const outputPath = path.join(__dirname, './services');
     removeFolder(outputPath);
+
     await generate({
         tagAlias: {
             pet: 'petAlias',
@@ -16,7 +17,22 @@ it('generate services', async () => {
                 Authorization,
             },
         },
-        urls,
+        urls: [urls[0]],
+        outputPath,
+        hasExtraFetchOptions: true,
+    });
+
+    await generate({
+        tagAlias: {
+            pet: 'petAlias',
+        },
+        fetchOptions: {
+            headers: {
+                Authorization,
+            },
+        },
+        urls: [urls[1]],
+        include: ['user'],
         outputPath,
         hasExtraFetchOptions: true,
     });

@@ -1,3 +1,4 @@
+import { isRegExp } from 'util';
 import { SwaggerResponse, SwaggerFetchOptions } from '../interfaces';
 import { fetchSwaggerJson, writeFile } from '../utils';
 import parseSwaggerJson from '../parseSwaggerJson';
@@ -46,26 +47,42 @@ class ApiGenerator {
      * 生成接口文件
      */
     async generate() {
-        const { tagAlias = {}, outputPath } = this.options;
+        const { tagAlias = {}, outputPath, include, exclude } = this.options;
         const messages: GenMessageWrapper[] = [];
         let curIndex = 0;
         for await (const swaggerResponse of this.swaggerResponses) {
             const dirname = this.urls[curIndex][1];
             const { swaggerObj, basePath, definitions } = parseSwaggerJson(swaggerResponse);
-            const apiModelPromises = Object.keys(swaggerObj).map(key => {
-                const alias = tagAlias[key.trim()];
-                const filename = join(outputPath, `${dirname}/${alias ? alias : key.trim()}.ts`);
-                const contents = getApiModel(
-                    swaggerObj[key].paths,
-                    key,
-                    basePath,
-                    filename,
-                    this.options
-                );
-                return genFile(filename, contents);
-            });
+            const includeKeys = Object.keys(swaggerObj)
+                .map(key => key.trim())
+                .filter(key => swaggerObjFilter(key, include, exclude));
+            const { apiModelPromises, globalInterfaceNamesSet } = includeKeys.reduce<{
+                apiModelPromises: Promise<GenMessage>[];
+                globalInterfaceNamesSet: Set<string>;
+            }>(
+                (target, key) => {
+                    const alias = tagAlias[key];
+                    const filename = join(outputPath, `${dirname}/${alias ? alias : key}.ts`);
+                    const { content, relatedInterfaceNames } = getApiModel(
+                        swaggerObj[key].paths,
+                        key,
+                        basePath,
+                        filename,
+                        this.options
+                    );
+                    target.apiModelPromises.push(genFile(filename, content));
+                    relatedInterfaceNames.forEach(name => target.globalInterfaceNamesSet.add(name));
+                    return target;
+                },
+                {
+                    apiModelPromises: [],
+                    globalInterfaceNamesSet: new Set<string>(),
+                }
+            );
             // swagger 所有的 定义的模型，生成到一个 interfaces 文件
-            const interfaceModelsContent = getInterfacesModel(definitions);
+            const interfaceModelsContent = getInterfacesModel(definitions, [
+                ...globalInterfaceNamesSet,
+            ]);
             const interfacesFilename = join(outputPath, `${dirname}/${interfaceModelsName}.ts`);
             const interfacesModelPromise = genFile(interfacesFilename, interfaceModelsContent);
 
@@ -81,6 +98,29 @@ class ApiGenerator {
 }
 
 export default ApiGenerator;
+
+/**
+ * 在 swaggerObj 中筛选出需要生成的 接口
+ * @param key 当前的 tag
+ * @param include 需要生成的 tag 优先级大于 exclude
+ * @param exclude 不需要生成的 tag
+ */
+function swaggerObjFilter(key: string, include?: RegExp | string[], exclude?: RegExp | string[]) {
+    const isMatch = (pattern?: RegExp | string[]) => {
+        if (isRegExp(pattern)) {
+            return pattern.test(key);
+        }
+        if (Array.isArray(pattern)) {
+            return pattern.includes(key);
+        }
+    };
+    const includeIsMatch = isMatch(include);
+    if (typeof includeIsMatch === 'undefined') {
+        const excludeIsMatch = isMatch(exclude);
+        return typeof excludeIsMatch === 'undefined' ? true : !excludeIsMatch;
+    }
+    return includeIsMatch;
+}
 
 /**
  * 处理一组 Promise 不管成功失败 都返回数据
