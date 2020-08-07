@@ -1,7 +1,7 @@
 import { Definitions } from '../interfaces';
 import getInterface from './getInterface';
 import renderRefModelTitle from './getRefModelTitle';
-import { CommentType } from './interfaces';
+import { CommentType, InterfaceModel } from './interfaces';
 
 /**
  * 将 definitions 结构转化为 interface 结构
@@ -15,8 +15,8 @@ export default (definitions: Definitions, includeInterfaceNames: string[]): stri
      * 1. 传入的 includeInterfaceNames
      * 2. includeInterfaceNames 关联的其他 接口名称
      */
-    const includeInterfaceNamesWithRelated = new Set(includeInterfaceNames);
-    const interfaceContentByName = new Map<string, string>();
+    const includeInterfaceNamesWithRelated = new Set();
+    const interfaceModelByName = new Map<string, InterfaceModel>();
 
     const definitionKeys = Object.keys(definitions);
     definitionKeys.forEach(key => {
@@ -24,19 +24,31 @@ export default (definitions: Definitions, includeInterfaceNames: string[]): stri
             ...definitions[key],
             title: key,
         });
-        const { content: interfaceContent, relatedInterfaceNames } = getInterface(
-            definitions[key],
-            CommentType.singleRight
-        );
-
-        interfaceContentByName.set(interfaceName, interfaceContent);
-        if (includeInterfaceNames.includes(interfaceName)) {
-            relatedInterfaceNames.forEach(name => includeInterfaceNamesWithRelated.add(name));
-        }
+        const interfaceModel = getInterface(definitions[key], CommentType.singleRight);
+        interfaceModelByName.set(interfaceName, interfaceModel);
     });
-
+    /**
+     * 递归获取需要生成的 interfaceName
+     * @param relatedInterfaceNames 关联的接口名称(表示需要生成的接口)
+     */
+    const getRelatedInterfaceNames = (relatedInterfaceNames: string[]) => {
+        if (relatedInterfaceNames.length === 0) return;
+        interfaceModelByName.forEach((interfaceModel, interfaceName) => {
+            if (relatedInterfaceNames.includes(interfaceName)) {
+                includeInterfaceNamesWithRelated.add(interfaceName);
+                /**
+                 * 获得当前没有添加过的 关联 interfaceName
+                 */
+                const uniqueRelatedInterfaceNames = interfaceModel.relatedInterfaceNames.filter(
+                    interfaceName => !includeInterfaceNamesWithRelated.has(interfaceName)
+                );
+                getRelatedInterfaceNames(uniqueRelatedInterfaceNames);
+            }
+        });
+    };
+    getRelatedInterfaceNames(includeInterfaceNames);
     const interfaceContents: string[] = [];
-    interfaceContentByName.forEach((interfaceContent, interfaceName) => {
+    interfaceModelByName.forEach(({ content: interfaceContent }, interfaceName) => {
         if (includeInterfaceNamesWithRelated.has(interfaceName)) {
             interfaceContents.push(
                 interfaceContent.trim().indexOf('{') === 0
